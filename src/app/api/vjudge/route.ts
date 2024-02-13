@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const urlParams = request.nextUrl.searchParams;
   let contestUrl = urlParams.get("contest") ?? "";
   const contestId = isValidContest(contestUrl);
-  if (contestId == -1) {
+  if (contestId == "") {
     return NextResponse.json(
       { data: [], error: ["Invalid contest url"] },
       { status: 400 }
@@ -65,17 +65,16 @@ export async function GET(request: NextRequest) {
   );
 }
 
-
-function isValidContest(url: string): number {
+function isValidContest(url: string): string {
   const regex = /(https:\/\/vjudge.net\/contest\/)(\d+)/gim;
   const matches = regex.exec(url);
   if (matches === null) {
-    return -1;
+    return "";
   }
-  return Number(matches[2]);
+  return matches[2];
 }
 
-function scrapTable(contestId: number): Array<Submission> {
+function scrapTable(contestId: string): Array<Submission> {
   const table = document.getElementById("listStatus");
   table!.classList.add("hover-date");
 

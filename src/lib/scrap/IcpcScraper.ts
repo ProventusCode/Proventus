@@ -1,11 +1,11 @@
-export class IcpcScraper implements Scraper, Browseable {
-
+export class IcpcScraper implements Scraper {
   isValidContestId(contestId: string): boolean {
     throw new Error("Method not implemented.");
   }
   async getContestMetadata(contestId: string): Promise<Contest> {
     const ENV_URL =
       "https://icpc.global/regionals/finder/ColombiaMaratonNalACISREDIS-2024";
+    return await fetch(ENV_URL).then((res) => res.json());
   }
   getProblems(contestId: string): Promise<Problem[]> {
     throw new Error("Method not implemented.");
