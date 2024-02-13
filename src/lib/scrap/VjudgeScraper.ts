@@ -1,52 +1,70 @@
 import * as cheerio from "cheerio";
+import { toPostgresDate } from "../utils";
 
 export class VjudgeScraper implements Scraper {
-  async getContestMetadata(contestId: number): Promise<Contest> {
-    "use server";
+
+  isValidContestId(contestId: string): boolean {
+    return Number.isInteger(Number(contestId));
+  }
+
+  async getContestMetadata(contestId: string): Promise<Contest> {
     const ENV_ENDPOINT = "https://vjudge.net/contest/" + contestId;
+
     const response = await fetch(ENV_ENDPOINT);
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    const rawText = $('textarea[name="dataJson"]').text() || "";
+    const rawText = $('textarea[name="dataJson"]').text() || "{}";
     const data = JSON.parse(rawText);
+
+    const start = new Date(data.begin);
+    const end = new Date(data.end);
+    const duration = end.getTime() - start.getTime();
 
     return {
       id: data.id,
       contest_name: data.title,
       platform: "Vjudge",
-      start_date: new Date(data.begin),
-      end_date: new Date(data.end),
+      start_date: toPostgresDate(start),
+      end_date: toPostgresDate(end),
+      duration: duration,
       manager: data.managerName,
       registered_participants: 0,
       source: ENV_ENDPOINT,
-      extracted_at: new Date(),
+      extracted_at: toPostgresDate(new Date()),
     };
   }
-  async getProblems(contestId: number): Promise<Problem[]> {
+
+  async getProblems(contestId: string): Promise<Problem[]> {
     const ENV_ENDPOINT = "https://vjudge.net/contest/" + contestId;
+
     const response = await fetch(ENV_ENDPOINT);
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    const rawText = $('textarea[name="dataJson"]').text() || "";
+    const rawText = $('textarea[name="dataJson"]').text() || "{}";
     const data = JSON.parse(rawText);
-    return data.problems.map((problem: any) => ({
-      id: contestId + problem.num,
-      problem_name: problem.title,
-      origin: problem.oj,
-      time_limit: problem.properties[0].content,
-      memory_limit: problem.properties[1].content,
-    }));
+    return data.problems.map(
+      (problem: any): Problem => ({
+        indicative: problem?.num,
+        id: problem?.pid,
+        problem_name: problem?.title,
+        origin: problem?.oj,
+        time_limit: problem?.properties[0].content.split(" ")[0],
+        memory_limit: problem?.properties[1].content.split(" ")[0],
+      })
+    );
   }
-  async getSubmissions(contestId: number): Promise<Submission[]> {
+
+  async getSubmissions(contestId: string): Promise<Submission[]> {
     const ENV_ENDPOINT = "https://vjudge.net/status/data";
+
     let start = 0;
     const paginationSize = 20;
     const statusEndpoint = new URL(ENV_ENDPOINT);
     statusEndpoint.searchParams.set("start", start.toString());
     statusEndpoint.searchParams.set("length", paginationSize.toString());
-    statusEndpoint.searchParams.set("contestId", contestId.toString());
+    statusEndpoint.searchParams.set("contestId", contestId);
     statusEndpoint.searchParams.set("inContest", "true");
 
     const submissions: any[] = [];
@@ -62,7 +80,7 @@ export class VjudgeScraper implements Scraper {
           memory_consumed: submission.memory,
           problem_name: submission.contestNum,
           result: submission.status,
-          submission_date: submission.time,
+          submission_date: toPostgresDate(new Date(submission.time)),
           time_consumed: submission.runtime,
           user_name: submission.userName,
         }));

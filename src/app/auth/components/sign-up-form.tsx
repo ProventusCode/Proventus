@@ -25,7 +25,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { signUpWithEmailAndPassword } from "../actions";
-import OAuthForm from "./OAuthForm";
+import OAuthForm from "./oauth-form";
 import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z

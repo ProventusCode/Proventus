@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import Link from "next/link";
-import OAuthForm from "./OAuthForm";
+import OAuthForm from "./oauth-form";
 
 export default function SignInForm() {
   return (

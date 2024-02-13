@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import AuthForm from "./components/AuthForm";
+import AuthForm from "./components/auth-form";
 import { redirect } from "next/navigation";
 import readUserSession from "@/lib/supabase/actions";
 

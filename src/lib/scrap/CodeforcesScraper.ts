@@ -1,11 +1,14 @@
 export class CodeforcesScraper implements Scraper {
-  getContestMetadata(contestId: number): Promise<Contest> {
+  isValidContestId(contestId: string): boolean {
+    return Number.isInteger(Number(contestId));
+  }
+  getContestMetadata(contestId: string): Promise<Contest> {
     throw new Error("Method not implemented.");
   }
-  getProblems(contestId: number): Promise<Problem[]> {
+  getProblems(contestId: string): Promise<Problem[]> {
     throw new Error("Method not implemented.");
   }
-  getSubmissions(contestId: number): Promise<Submission[]> {
+  getSubmissions(contestId: string): Promise<Submission[]> {
     throw new Error("Method not implemented.");
   }
 }

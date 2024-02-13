@@ -91,3 +91,5 @@ pnpm dlx supabase gen types typescript --project-id "$PROJECT_REF" --schema publ
 [When do I use path params vs. query params in a RESTful API?](https://stackoverflow.com/questions/30967822/when-do-i-use-path-params-vs-query-params-in-a-restful-api)
 
 [Table](https://muhimasri.com/blogs/react-editable-table/)
+
+https://nextui.org/docs/components/table
