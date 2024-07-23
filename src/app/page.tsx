@@ -1,12 +1,7 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/3aAD6PN6y7m
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function Component() {
+export default function LandingPage() {
   return (
     <div>
       <nav className="flex justify-between items-center py-4 px-12 bg-gradient-to-r from-white to-green-100">
@@ -66,7 +61,7 @@ export default function Component() {
             </div>
           </div>
         </div>
-        <section className="container mx-auto w-full py-12  animate-loop-scroll">
+        <section className="container mx-auto w-full py-12 animate-loop-scroll">
           <h3 className="text-2xl font-bold tracking-tighter text-center sm:text-5xl xl:text-5xl/none">
             Plataformas integradas
           </h3>
@@ -173,7 +168,7 @@ export default function Component() {
                 Regístrate ahora en Proventus
               </h1>
               <p className="text-green-900 text-center">
-                Hecho para cualquier persona que quiera inciar en el mundo de la
+                Hecho para cualquier persona que quiera iniciar en el mundo de la
                 programación competitiva.
               </p>
               <Button className="bg-green-700 text-white px-8 py-4 rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-900 focus:ring-opacity-50">

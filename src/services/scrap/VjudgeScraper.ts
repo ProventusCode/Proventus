@@ -1,16 +1,26 @@
+import { toPostgresDate } from "@/app/utils/date.utils";
+import { Platform } from "@/enums/platform";
+import { BrowserFactory } from "@/services/scrap/BrowserFactory";
+import {
+  Contest,
+  ContestStanding,
+  Problem,
+  Submission,
+} from "@/types/contest.types";
 import * as cheerio from "cheerio";
-import { toPostgresDate } from "../utils";
+import { randomUUID } from "crypto";
+import { endpoints } from "../endpoints";
+import { ScraperService } from "./ScraperService";
 
-export class VjudgeScraper implements Scraper {
-
+export class VjudgeScraper implements ScraperService {
   isValidContestId(contestId: string): boolean {
     return Number.isInteger(Number(contestId));
   }
 
   async getContestMetadata(contestId: string): Promise<Contest> {
-    const ENV_ENDPOINT = "https://vjudge.net/contest/" + contestId;
+    const endpoint = `${endpoints.vjudge.contest}/${contestId}`;
 
-    const response = await fetch(ENV_ENDPOINT);
+    const response = await fetch(endpoint);
     const html = await response.text();
     const $ = cheerio.load(html);
 
@@ -24,21 +34,21 @@ export class VjudgeScraper implements Scraper {
     return {
       id: data.id,
       contest_name: data.title,
-      platform: "Vjudge",
+      platform: Platform.VJUDDE,
       start_date: toPostgresDate(start),
       end_date: toPostgresDate(end),
       duration: duration,
       manager: data.managerName,
       registered_participants: 0,
-      source: ENV_ENDPOINT,
+      source: endpoint,
       extracted_at: toPostgresDate(new Date()),
     };
   }
 
   async getProblems(contestId: string): Promise<Problem[]> {
-    const ENV_ENDPOINT = "https://vjudge.net/contest/" + contestId;
+    const endpoint = `${endpoints.vjudge.contest}/${contestId}`;
 
-    const response = await fetch(ENV_ENDPOINT);
+    const response = await fetch(endpoint);
     const html = await response.text();
     const $ = cheerio.load(html);
 
@@ -57,22 +67,20 @@ export class VjudgeScraper implements Scraper {
   }
 
   async getSubmissions(contestId: string): Promise<Submission[]> {
-    const ENV_ENDPOINT = "https://vjudge.net/status/data";
-
     let start = 0;
     const paginationSize = 20;
-    const statusEndpoint = new URL(ENV_ENDPOINT);
+    const statusEndpoint = new URL(endpoints.vjudge.status);
     statusEndpoint.searchParams.set("start", start.toString());
     statusEndpoint.searchParams.set("length", paginationSize.toString());
     statusEndpoint.searchParams.set("contestId", contestId);
     statusEndpoint.searchParams.set("inContest", "true");
 
-    const submissions: any[] = [];
+    const submissions: Submission[] = [];
     while (true) {
       try {
         const response = await fetch(statusEndpoint);
         const json = await response.json();
-        const data: Array<any> = json.data.map((submission: any) => ({
+        const data: Submission[] = json.data.map((submission: any) => ({
           code_length: submission.sourceLength,
           contest_id: submission.contestId,
           id: submission.runId,
@@ -96,5 +104,48 @@ export class VjudgeScraper implements Scraper {
       }
     }
     return submissions;
+  }
+
+  async getContestStandings(contestId: string): Promise<ContestStanding[]> {
+    const endpoint = `${endpoints.vjudge.contest}/${contestId}#rank`;
+
+    const browser = await BrowserFactory.getBrowser();
+    const page = await browser.newPage();
+    await page.goto(endpoint);
+
+    await page.waitForNetworkIdle();
+    const html = await page.content();
+
+    const $ = cheerio.load(html);
+
+    const $table = $("#contest-rank-table tbody tr");
+    const standings: ContestStanding[] = [];
+    $table.each((_i, tr) => {
+      const $tr = $(tr);
+      const $td = $tr.find("td");
+
+      const problems: Record<string, number> = {};
+      for (let i = 4; i < $td.length; i++) {
+        const problem = $td.eq(i).text().trim();
+        if (problem === "") {
+          break;
+        }
+        problems[String.fromCharCode(65 + i - 4)] = Number(problem);
+      }
+      const standing = {
+        contest_id: contestId,
+        id: randomUUID(),
+        university: "",
+        rank: Number($td.eq(0).text().trim()),
+        team: $td.eq(1).text().trim(),
+        problems_solved: Number($td.eq(2).text().trim()),
+        total_time: Number($td.eq(3).text().trim()),
+        problems_stats: {},
+      };
+      standings.push(standing);
+    });
+
+    await browser.close();
+    return standings;
   }
 }

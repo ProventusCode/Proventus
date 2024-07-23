@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { toPostgresDate } from "@/lib/utils";
+import { toPostgresDate } from "@/app/utils/date.utils";
 import { Column, Row, Table } from "@tanstack/react-table";
 
 import { useEffect, useState } from "react";

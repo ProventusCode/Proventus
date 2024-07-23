@@ -23,26 +23,37 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/components/ui/icons";
-import { ScraperFactory } from "@/lib/scrap/ScraperFactory";
-import { DataTable } from "../../../components/ui/data-table";
+import {
+  Contest,
+  ContestStanding,
+  Problem,
+  Submission,
+} from "@/types/contest.types";
+import { DataTable } from "@/components/ui/data-table";
+import { scrapContest } from "./actions";
 import { contestHeaders } from "./components/contest-headers";
 import { problemHeaders } from "./components/problem-headers";
 import { submissionHeaders } from "./components/submission-headers";
 
 const formSchema = z.object({
-  contestId: z.string().min(1, { message: "El ID del contest es obligatorio" }),
-  platform: z.string().min(1, { message: "La plataforma es obligatoria" }),
+  contestId: z
+    .string()
+    .trim()
+    .min(1, { message: "El ID del contest es obligatorio" }),
+  platform: z
+    .string()
+    .trim()
+    .min(1, { message: "La plataforma es obligatoria" }),
 });
 
 export default function ContestPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [placeholder, setPlaceholder] = useState<string>(
-    "Seleccionar plataforma"
-  );
+  const [placeholder, setPlaceholder] = useState<string>("...");
 
   const [contest, setContest] = useState<Contest>();
   const [problems, setProblems] = useState<Problem[]>();
   const [submissions, setSubmissions] = useState<Submission[]>();
+  const [standings, setStandings] = useState<ContestStanding[]>();
 
   const scrapContestForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,46 +62,35 @@ export default function ContestPage() {
       platform: "",
     },
   });
-  
+
   const placeholders: Record<string, string> = {
-    codeforces: "[número]: 12345",
-    icpc: "ColombiaMaratonNalACISREDIS-[yyyy]",
-    rpc: "[yyyy]-[número]: 2023-13",
-    vjudge: "[número]: 567890",
+    codeforces: "12345",
+    icpc: "ColombiaMaratonNalACISREDIS-2024",
+    rpc: "2024-01",
+    vjudge: "567890",
   };
 
   const onSubmit = async (params: z.infer<typeof formSchema>) => {
     setIsLoading(true);
 
-    const creator = ScraperFactory.getCreator(params.platform);
-    const scraper = creator.createScraper();
-
-    if (!scraper.isValidContestId(params.contestId)) {
+    const response = await scrapContest(params.platform, params.contestId);
+    if ("field" in response) {
+      const { field, message } = response;
+      scrapContestForm.setError(field, { message });
       setIsLoading(false);
-      scrapContestForm.setError("contestId", {
-        type: "manual",
-        message: "Formato de ID inválido",
-      });
       return;
     }
 
-    const contest = scraper.getContestMetadata(params.contestId);
-    const problems = scraper.getProblems(params.contestId);
-    const submissions = scraper.getSubmissions(params.contestId);
+    const { contest, problems, submissions, standings } = response;
 
-    contest.then((contest) => {
-      setContest(contest);
-    });
-    problems.then((problems) => {
-      setProblems(problems);
-    });
-    submissions.then((submissions) => {
-      setSubmissions(submissions);
-    });
+    contest.then(setContest);
+    problems.then(setProblems);
+    submissions.then(setSubmissions);
+    standings.then(setStandings);
 
-    Promise.allSettled([contest, problems, submissions]).then(() => {
-      setIsLoading(false);
-    });
+    Promise.allSettled([contest, problems, submissions, standings]).then(() =>
+      setIsLoading(false)
+    );
   };
 
   return (
@@ -99,31 +99,12 @@ export default function ContestPage() {
         <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
           Registrar Contest
         </h2>
+
         <Form {...scrapContestForm}>
           <form
             onSubmit={scrapContestForm.handleSubmit(onSubmit)}
             className="mt-4 space-y-8"
           >
-            <FormField
-              control={scrapContestForm.control}
-              name="contestId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="contestId">Contest ID</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="contestId"
-                      placeholder={placeholder}
-                      required
-                      {...field}
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={scrapContestForm.control}
               name="platform"
@@ -139,7 +120,10 @@ export default function ContestPage() {
                       disabled={isLoading}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue id="platform" placeholder="👇..." />
+                        <SelectValue
+                          id="platform"
+                          placeholder="Seleccionar plataforma 👇"
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="codeforces">Codeforces</SelectItem>
@@ -153,6 +137,25 @@ export default function ContestPage() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={scrapContestForm.control}
+              name="contestId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="contestId">Contest ID</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="contestId"
+                      placeholder={placeholder}
+                      {...field}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button className="w-full" type="submit" disabled={isLoading}>
               Iniciar Scraping
               {isLoading && (
@@ -162,6 +165,7 @@ export default function ContestPage() {
           </form>
         </Form>
       </div>
+
       {contest && (
         <section className="container mx-auto my-4 p-4 bg-white shadow rounded-md">
           <div className="flex justify-between mb-4">
@@ -169,6 +173,7 @@ export default function ContestPage() {
           </div>
         </section>
       )}
+
       {problems && (
         <section className="container mx-auto my-4 p-4 bg-white shadow rounded-md">
           <div className="flex justify-between mb-4">

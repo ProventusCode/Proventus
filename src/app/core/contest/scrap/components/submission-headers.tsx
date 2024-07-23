@@ -1,5 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { DataTableCell } from "../../../../components/ui/data-table-cell";
+import { DataTableCell } from "@/components/ui/data-table-cell";
+import { Submission } from "@/types/contest.types";
 
 const columnHelper = createColumnHelper<Submission>();
 

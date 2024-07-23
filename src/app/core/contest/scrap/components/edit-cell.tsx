@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Row, Table } from "@tanstack/react-table";
+import { PencilRuler, Save } from "lucide-react";
 import { MouseEvent } from "react";
 
 interface EditCellProps<TData> {
@@ -23,8 +24,12 @@ export function EditCell<TData>({
   };
 
   return meta?.editedRows[row.id] ? (
-    <Button onClick={setEditedRows}>Save</Button>
+    <Button variant="outline" onClick={setEditedRows}>
+      <Save />
+    </Button>
   ) : (
-    <Button onClick={setEditedRows}>Edit</Button>
+    <Button variant="outline" onClick={setEditedRows}>
+      <PencilRuler />
+    </Button>
   );
 }

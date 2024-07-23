@@ -1,11 +1,10 @@
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
   Table,
@@ -26,8 +25,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Dispatch, SetStateAction, useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "./button";
+import { createClient } from "@supabase/supabase-js";
 
 type Row = Record<string | number | symbol, boolean>;
 
@@ -77,7 +76,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <Table>
+    <Table className="table-auto">
       <TableHeader className="bg-gray-200">
         <TableRow>
           {table.getHeaderGroups().map((headerGroup) =>
@@ -96,7 +95,7 @@ export function DataTable<TData, TValue>({
       </TableHeader>
       <TableBody>
         {table.getRowModel().rows.map((row) => (
-          <TableRow key={row.id}>
+          <TableRow key={row.id} className="text-center">
             {row.getVisibleCells().map((cell) => (
               <TableCell key={cell.id}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

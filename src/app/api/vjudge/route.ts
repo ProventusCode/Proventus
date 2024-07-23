@@ -94,7 +94,7 @@ function scrapTable(contestId: string): Array<Submission> {
     }
     const submission: Submission = {
       contest_id: contestId,
-      id: Number(rowData[0]),
+      id: rowData[0],
       user_name: rowData[1],
       problem_name: rowData[2],
       result: rowData[3],
