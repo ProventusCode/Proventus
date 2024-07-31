@@ -32,16 +32,17 @@ export default function Page() {
   };
 
   return (
-    <div key="1" className="px-4 flex flex-col m-10 ml-40 mr-40">
+    // ml-40 mr-40
+    <div key="1" className="px-4 w-full ">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center space-x-4">
+        {/* <div className="flex items-center space-x-4">
           <div className="flex-1">
             <h1 className="text-2xl font-bold">Datos del Contest</h1>
             <Button onClick={onClick} size="sm">
               Guardar cambios
             </Button>
           </div>
-          <div className="w-[300px]">
+          <div className="w-full">
             <div className="grid gap-1.5">
               <Label className="text-sm" htmlFor="source">
                 Source
@@ -49,7 +50,7 @@ export default function Page() {
               <Input id="source" placeholder="Enter source" />
             </div>
           </div>
-        </div>
+        </div> */}
         <Tabs defaultValue="contest">
           <TabsList className="flex gap-4">
             <TabsTrigger value="contest">Metadatos</TabsTrigger>
@@ -78,11 +79,9 @@ export default function Page() {
           <TabsContent value="submissions">
             <div className="flex flex-col gap-4">
               <Button size="sm">Agregar envío</Button>
-
               {submissions && (
                 <DataTable data={submissions} columns={submissionHeaders} />
               )}
-              
             </div>
           </TabsContent>
           <TabsContent value="standings">
