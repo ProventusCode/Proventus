@@ -2,10 +2,9 @@ import { BrowserFactory } from "@/services/scrap/BrowserFactory";
 import { Problem, Submission } from "@/types/contest.types";
 import * as cheerio from "cheerio";
 import { randomUUID } from "crypto";
-import { NextRequest, NextResponse } from "next/server";
 
 
-export async function GET(request: NextRequest) {
+export async function scrapBoca(){
   const ENV_URL = "https://redprogramacioncompetitiva.com/contests/2023/13/";
 
   const browser = await BrowserFactory.getBrowser();
@@ -20,8 +19,8 @@ export async function GET(request: NextRequest) {
     const passwordInput = inputs[1];
     const submitButton = inputs[2];
 
-    userNameInput.value = "UnDECoder";
-    passwordInput.value = "Tatonaranjo1";
+    userNameInput.value = "";
+    passwordInput.value = "";
 
     submitButton.click();
   });
@@ -91,5 +90,5 @@ export async function GET(request: NextRequest) {
   });
 
   await browser.close();
-  return NextResponse.json({ problems, submissions });
+  return { problems, submissions };
 }
