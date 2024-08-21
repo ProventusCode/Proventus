@@ -8,7 +8,7 @@ export class BrowserFactory {
         ? process.env.CHROMIUM_PATH
         : await chromium.executablePath();
 
-    const browser = await puppeteer.launch({
+    return await puppeteer.launch({
       args: [
         "--disable-setuid-sandbox",
         "--disable-infobars",
@@ -36,7 +36,5 @@ export class BrowserFactory {
       executablePath: chromiumPath,
       headless: chromium.headless,
     });
-
-    return browser;
   }
 }

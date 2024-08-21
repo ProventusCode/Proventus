@@ -13,7 +13,7 @@ export const contestHeaders = [
       type: "string",
     },
   }),
-  columnHelper.accessor("contest_name", {
+  columnHelper.accessor("name", {
     header: "Nombre",
     cell: DataTableCell,
     meta: {

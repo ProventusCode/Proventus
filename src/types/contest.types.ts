@@ -1,9 +1,9 @@
-import { Platform } from "@/enums/platform";
+import { PlatformEnum } from "@/enums/PlatformEnum";
 
 export type Submission = {
+  id: string;
   code_length: number;
   contest_id: string;
-  id: string;
   language: string;
   memory_consumed: number | undefined;
   problem_name: string;
@@ -14,8 +14,8 @@ export type Submission = {
 };
 
 export type Problem = {
-  indicative: string;
   id: string;
+  indicative: string;
   problem_name: string;
   origin: string;
   time_limit: number;
@@ -24,11 +24,11 @@ export type Problem = {
 
 export type Contest = {
   id: string;
-  contest_name: string;
-  platform: Platform;
-  start_date: string;
+  name: string;
+  platform: PlatformEnum;
+  start_date: Date;
+  end_date: Date;
   duration: number;
-  end_date: string;
   manager: string;
   registered_participants: number | undefined;
   source: string;

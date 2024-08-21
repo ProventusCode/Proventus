@@ -17,7 +17,12 @@ export default function LandingPage() {
           </a>
         </div>
         <div className="flex items-center space-x-4">
-          <Button className="bg-[#238636] text-sm">Login</Button>
+          <Link
+            className="inline-flex h-10 items-center justify-center rounded-md bg-[#238636] px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+            href="/auth"
+          >
+            Login
+          </Link>
         </div>
       </nav>
       <section
@@ -168,11 +173,11 @@ export default function LandingPage() {
                 Regístrate ahora en Proventus
               </h1>
               <p className="text-green-900 text-center">
-                Hecho para cualquier persona que quiera iniciar en el mundo de la
-                programación competitiva.
+                Hecho para cualquier persona que quiera iniciar en el mundo de
+                la programación competitiva.
               </p>
               <Button className="bg-green-700 text-white px-8 py-4 rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-900 focus:ring-opacity-50">
-                Get Started
+                Comienza ahora!
               </Button>
             </div>
           </div>

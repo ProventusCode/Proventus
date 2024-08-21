@@ -1,3 +1,8 @@
 export default function Page() {
-  return <h1> Page</h1>;
+  return (
+    <iframe
+      src="https://llama2.streamlit.app?embed=true"
+    className="w-full h-[800px] "
+    ></iframe>
+  );
 }

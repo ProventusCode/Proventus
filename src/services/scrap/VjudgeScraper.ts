@@ -1,5 +1,5 @@
-import { toPostgresDate } from "@/app/utils/date.utils";
-import { Platform } from "@/enums/platform";
+import { toPostgresDate } from "@/utils/dateUtils";
+import { PlatformEnum } from "@/enums/PlatformEnum";
 import { BrowserFactory } from "@/services/scrap/BrowserFactory";
 import {
   Contest,
@@ -32,11 +32,11 @@ export class VjudgeScraper implements ScraperService {
     const duration = end.getTime() - start.getTime();
 
     return {
-      id: data.id,
-      contest_name: data.title,
-      platform: Platform.VJUDDE,
-      start_date: toPostgresDate(start),
-      end_date: toPostgresDate(end),
+      id: contestId,
+      name: data.title,
+      platform: PlatformEnum.VJUDDE,
+      start_date: start,
+      end_date: end,
       duration: duration,
       manager: data.managerName,
       registered_participants: 0,

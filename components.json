@@ -11,8 +11,9 @@
   },
   "aliases": {
     "components": "@/components",
-    "utils": "@/lib/utils",
+    "utils": "@/utils",
     "services": "@/services",
-    "types": "@/types"
+    "types": "@/types",
+    "db": "@/db"
   }
 }
