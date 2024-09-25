@@ -5,6 +5,7 @@ import {
   Blocks,
   Code,
   LineChartIcon,
+  LucideMessageCircleCode,
   UsersIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -27,9 +28,9 @@ const menuItems = [
     href: "/core/users",
   },
   {
-    label: "Analíticas",
-    icon: LineChartIcon,
-    href: "/core/analytics",
+    label: "Chat",
+    icon: LucideMessageCircleCode,
+    href: "/core/chat",
   },
 ];
 
@@ -37,7 +38,8 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const className = "text-gray-500 hover:text-gray-900 dark:text-gray-400";
-  const activeClassName = "text-gray-900 bg-gray-100 dark:bg-gray-800 dark:text-gray-50";
+  const activeClassName =
+    "text-gray-900 bg-gray-100 dark:bg-gray-800 dark:text-gray-50";
 
   return (
     <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">

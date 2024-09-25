@@ -1,25 +1,29 @@
 import { integer, json, serial, varchar } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
-import { audit } from "./audit";
-import { contest } from "./contest";
+import { competitor } from "./Competitor";
+import { audit } from "./Audit";
+import { contest } from "./Contest";
 
 export interface ProblemStatistic {
   problemId: string;
-  indicative: string;
-  submitTime: string;
+  index: string;
+  submitTime: number;
   attempts: number;
 }
 
 export const contestStanding = schema.table("contest_standing", {
   id: serial("id").primaryKey(),
-  contestId: integer("contest_id")
+  contestId: varchar("contest_id", { length: 16 })
     .notNull()
-    .references(() => contest.id),
+    .references(() => contest.contestId),
   rank: integer("rank").notNull(),
-  team: varchar("team", { length: 128 }).notNull(),
+  userName: varchar("user_name", { length: 128 })
+    .notNull()
+    .references(() => competitor.name),
+  universityName: varchar("university_name", { length: 128 }),
   problemsSolved: integer("problems_solved").notNull(),
-  penalty: integer("penalty").notNull(),
-  problemStatistics: json("problem_statistics").notNull(),
+  totalTime: integer("total_time").notNull(),
+  problemStatistics: json("problem_statistics").$type<ProblemStatistic[]>(),
   ...audit,
 });
 

@@ -1,97 +1,116 @@
-import { toPostgresDate } from "@/utils/dateUtils";
+import { ProblemStatistic } from "@/db/schema/ContestStanding";
 import { PlatformEnum } from "@/enums/PlatformEnum";
-import { BrowserFactory } from "@/services/scrap/BrowserFactory";
 import {
-  Contest,
-  ContestStanding,
-  Problem,
-  Submission,
+  ContestStandingType,
+  ContestType,
+  ProblemType,
+  SubmissionType,
 } from "@/types/contest.types";
+
+import { DataUtils } from "@/utils/DataUtils";
+import { DateUtils } from "@/utils/DateUtils";
+import { StringUtils } from "@/utils/StringUtils";
 import * as cheerio from "cheerio";
-import { randomUUID } from "crypto";
-import { endpoints } from "../endpoints";
+import { ENDPOINTS } from "../endpoints";
+import { getBrowser } from "./BrowserFactory";
 import { ScraperService } from "./ScraperService";
+import {
+  VjudgeContest,
+  VjudgeProblem,
+  VjudgeSubmission,
+} from "./types/VjudgeResponses";
+import { ObjectUtils } from "@/utils/ObjectUtils";
 
 export class VjudgeScraper implements ScraperService {
   isValidContestId(contestId: string): boolean {
     return Number.isInteger(Number(contestId));
   }
 
-  async getContestMetadata(contestId: string): Promise<Contest> {
-    const endpoint = `${endpoints.vjudge.contest}/${contestId}`;
+  async getContestMetadata(contestId: string): Promise<ContestType> {
+    const metadataEndpoint = `${ENDPOINTS.vjudge.contest}/${contestId}`;
+    const rankEndpoint = `${ENDPOINTS.vjudge.rank}/${contestId}`;
 
-    const response = await fetch(endpoint);
-    const html = await response.text();
+    const rank = await fetch(rankEndpoint);
+    const rankJson = await rank.json();
+
+    const metadata = await fetch(metadataEndpoint);
+    const html = await metadata.text();
     const $ = cheerio.load(html);
 
-    const rawText = $('textarea[name="dataJson"]').text() || "{}";
-    const data = JSON.parse(rawText);
-
-    const start = new Date(data.begin);
-    const end = new Date(data.end);
-    const duration = end.getTime() - start.getTime();
+    const rawJson = $('textarea[name="dataJson"]').text() || "{}";
+    const vjudgeContest: VjudgeContest = JSON.parse(rawJson);
 
     return {
-      id: contestId,
-      name: data.title,
+      contestId: contestId,
+      name: vjudgeContest?.title ?? rankJson?.title,
       platform: PlatformEnum.VJUDDE,
-      start_date: start,
-      end_date: end,
-      duration: duration,
-      manager: data.managerName,
-      registered_participants: 0,
-      source: endpoint,
-      extracted_at: toPostgresDate(new Date()),
+      startDate: DateUtils.toPostgresDate(vjudgeContest?.begin),
+      endDate: DateUtils.toPostgresDate(vjudgeContest?.end),
+      manager: vjudgeContest?.managerName,
+      participants: ObjectUtils.countObjectKeys(rankJson?.participants),
+      source: metadataEndpoint,
     };
   }
 
-  async getProblems(contestId: string): Promise<Problem[]> {
-    const endpoint = `${endpoints.vjudge.contest}/${contestId}`;
+  async getProblems(contestId: string): Promise<ProblemType[]> {
+    const endpoint = `${ENDPOINTS.vjudge.contest}/${contestId}`;
 
     const response = await fetch(endpoint);
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    const rawText = $('textarea[name="dataJson"]').text() || "{}";
-    const data = JSON.parse(rawText);
-    return data.problems.map(
-      (problem: any): Problem => ({
-        indicative: problem?.num,
-        id: problem?.pid,
-        problem_name: problem?.title,
-        origin: problem?.oj,
-        time_limit: problem?.properties[0].content.split(" ")[0],
-        memory_limit: problem?.properties[1].content.split(" ")[0],
-      })
+    const rawJson = $('textarea[name="dataJson"]').text() || "{}";
+    const vjudgeProblems = JSON.parse(rawJson);
+
+    return (
+      vjudgeProblems?.problems?.map(
+        (problem: VjudgeProblem): ProblemType => ({
+          problemId: `${contestId}-${problem.num}`,
+          index: problem.num,
+          name: problem.title,
+          origin: problem.oj,
+          timeLimit: DataUtils.msToSec(
+            DataUtils.separateValueWithUnit(problem.properties[0].content)
+          ),
+          memoryLimit: DataUtils.kbToMb(
+            DataUtils.separateValueWithUnit(problem.properties[1].content)
+          ),
+        })
+      ) ?? []
     );
   }
 
-  async getSubmissions(contestId: string): Promise<Submission[]> {
+  async getSubmissions(contestId: string): Promise<SubmissionType[]> {
     let start = 0;
     const paginationSize = 20;
-    const statusEndpoint = new URL(endpoints.vjudge.status);
+    const statusEndpoint = new URL(ENDPOINTS.vjudge.status);
     statusEndpoint.searchParams.set("start", start.toString());
     statusEndpoint.searchParams.set("length", paginationSize.toString());
     statusEndpoint.searchParams.set("contestId", contestId);
     statusEndpoint.searchParams.set("inContest", "true");
 
-    const submissions: Submission[] = [];
+    const submissions: SubmissionType[] = [];
     while (true) {
       try {
         const response = await fetch(statusEndpoint);
         const json = await response.json();
-        const data: Submission[] = json.data.map((submission: any) => ({
-          code_length: submission.sourceLength,
-          contest_id: submission.contestId,
-          id: submission.runId,
-          language: submission.language,
-          memory_consumed: submission.memory,
-          problem_name: submission.contestNum,
-          result: submission.status,
-          submission_date: toPostgresDate(new Date(submission.time)),
-          time_consumed: submission.runtime,
-          user_name: submission.userName,
-        }));
+        const data: SubmissionType[] = json?.data.map(
+          (submission: VjudgeSubmission): SubmissionType => ({
+            submissionId: submission.runId,
+            codeLength: submission.sourceLength,
+            contestId: contestId,
+            language: submission.languageCanonical,
+            memoryConsumed: submission.memory,
+            problemId: `${contestId}-${submission.contestNum}`,
+            problemIndex: submission.contestNum,
+            result: DataUtils.normalizeResult(submission.status),
+            submissionDateTime: DateUtils.toPostgresDate(
+              new Date(submission.time)
+            ),
+            timeConsumed: submission.runtime,
+            userName: submission.userName,
+          })
+        );
         if (data.length === 0) {
           break;
         }
@@ -99,53 +118,93 @@ export class VjudgeScraper implements ScraperService {
         start += 20;
         statusEndpoint.searchParams.set("start", start.toString());
       } catch (e) {
-        console.log(e);
+        console.error(e);
         break;
       }
     }
     return submissions;
   }
 
-  async getContestStandings(contestId: string): Promise<ContestStanding[]> {
-    const endpoint = `${endpoints.vjudge.contest}/${contestId}#rank`;
+  async getContestStandings(contestId: string): Promise<ContestStandingType[]> {
+    const url = `${ENDPOINTS.vjudge.contest}/${contestId}#rank`;
 
-    const browser = await BrowserFactory.getBrowser();
+    const browser = await getBrowser();
     const page = await browser.newPage();
-    await page.goto(endpoint);
+    await page.goto(url);
 
-    await page.waitForNetworkIdle();
+    const contestRankTable = "#contest-rank-table tbody tr";
+    const element = await page
+      .waitForSelector(contestRankTable, {
+        timeout: 5_000,
+      })
+      .then(
+        (table) => table,
+        () => null
+      );
+
+    if (!element) {
+      browser.close();
+      return [];
+    }
+
     const html = await page.content();
-
     const $ = cheerio.load(html);
+    browser.close();
 
-    const $table = $("#contest-rank-table tbody tr");
-    const standings: ContestStanding[] = [];
-    $table.each((_i, tr) => {
-      const $tr = $(tr);
-      const $td = $tr.find("td");
+    const $table = $(contestRankTable);
+    const standings: ContestStandingType[] = [];
+    $table.each((_, row) => {
+      const $row = $(row);
 
-      const problems: Record<string, number> = {};
-      for (let i = 4; i < $td.length; i++) {
-        const problem = $td.eq(i).text().trim();
-        if (problem === "") {
-          break;
-        }
-        problems[String.fromCharCode(65 + i - 4)] = Number(problem);
-      }
-      const standing = {
-        contest_id: contestId,
-        id: randomUUID(),
-        university: "",
-        rank: Number($td.eq(0).text().trim()),
-        team: $td.eq(1).text().trim(),
-        problems_solved: Number($td.eq(2).text().trim()),
-        total_time: Number($td.eq(3).text().trim()),
-        problems_stats: {},
+      const $problems = $row.find(".prob");
+      const problemStatistics: ProblemStatistic[] = [];
+      $problems.each((index, problem) => {
+        const $problem = $(problem);
+        const problemResult = this.parseProblemResult($problem.text().trim());
+        const problemStats = {
+          problemId: `${contestId}-${StringUtils.intToUpperChar(index)}`,
+          index: `${StringUtils.intToUpperChar(index)}`,
+          ...problemResult,
+        };
+        problemStatistics.push(problemStats);
+      });
+
+      const standing: ContestStandingType = {
+        contestId: contestId,
+        rank: Number($row.find(".rank").text().trim()),
+        userName: DataUtils.splitAndGetFirst($row.find(".team").text().trim()),
+        problemsSolved: Number($row.find(".solved").text().trim()),
+        totalTime: Number($row.find(".penalty > .minute").text().trim()),
+        problemStatistics: problemStatistics,
       };
+      this.extractUniversityName(standing.userName).then((universityName) => {
+        standing.universityName =
+          DataUtils.normalizeUniversityName(universityName);
+      });
       standings.push(standing);
     });
-
-    await browser.close();
     return standings;
+  }
+
+  private async extractUniversityName(userName: string): Promise<string> {
+    const url = `${ENDPOINTS.vjudge.user}/${userName}`;
+    const response = await fetch(url);
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    return $(".user-info > dd:nth-child(6)").text().trim();
+  }
+
+  private parseProblemResult(problemResult: string) {
+    const submitTimeRegex = /(\d+:\d+:\d+)/;
+    const attemptsRegex = /(-\d+)/;
+    const submitTime = RegExp(submitTimeRegex).exec(problemResult);
+    const attempts = RegExp(attemptsRegex).exec(problemResult);
+
+    return {
+      submitTime: submitTime
+        ? DateUtils.convertHourToMinutes(submitTime[0])
+        : 0,
+      attempts: attempts ? parseInt(attempts[0]) : 0,
+    };
   }
 }

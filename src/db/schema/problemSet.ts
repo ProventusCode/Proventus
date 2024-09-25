@@ -1,15 +1,15 @@
 import { integer, serial, varchar } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
-import { audit } from "./audit";
-import { contest } from "./contest";
+import { audit } from "./Audit";
+import { contest } from "./Contest";
 
 export const problemSet = schema.table("problem_set", {
   id: serial("id").primaryKey(),
   contestId: integer("contest_id")
     .notNull()
     .references(() => contest.id),
-  problemsFile: varchar("problems_file", { length: 256 }).notNull(),
-  editorialFile: varchar("editorial_file", { length: 256 }).notNull(),
+  problemsURL: varchar("problems_url", { length: 256 }).notNull(),
+  editorialURL: varchar("editorial_url", { length: 256 }).notNull(),
   ...audit,
 });
 

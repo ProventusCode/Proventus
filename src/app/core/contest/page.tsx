@@ -1,22 +1,41 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { DataTable } from "@/components/ui/data-table";
+import { findAllContest } from "@/services/actions/ContestActions";
+import { ContestMapper } from "@/services/mappers/ContestMapper";
+import { ContestType } from "@/types/contest.types";
+import { useEffect, useState } from "react";
+import SkeletonTable from "./[platform]/[contestId]/components/skeleton-table";
+import { ContestForm } from "./components/contest-form";
+import { getContestHeaders } from "./components/contest-headers";
 
-export default function ContestList() {
-  const pathName = usePathname();
-  const contestId = "1";
+export default function ContestsListPage() {
+  const [contests, setContests] = useState<ContestType[]>();
+  useEffect(() => {
+    async function initialize() {
+      const contests = await findAllContest();
+      console.log(contests);
+      setContests(ContestMapper.toContestTypeList(contests));
+    }
+    initialize();
+  }, []);
+
   return (
-    <div>
-      <h1>ContestList</h1>
-      <h2>Current path: {pathName}</h2>
-      <div className="my-4">
-        <Link
-          className=" bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded"
-          href={`${pathName}/${contestId}`}
-        >
-          Contest 1
-        </Link>
+    <div className="w-full max-w-5xl mx-auto p-4">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Administrar contests</h1>
+        <div className="flex items-center gap-4">
+          <ContestForm />
+        </div>
+      </div>
+      <div className="flex flex-items-center justify-center gap-4">
+        {contests ? (
+          <div className="rounded-xl border shadow-lg">
+            <DataTable data={contests} columns={getContestHeaders()} />
+          </div>
+        ) : (
+          <SkeletonTable columns={8} rows={5} prefix="standings" />
+        )}
       </div>
     </div>
   );

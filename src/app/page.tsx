@@ -26,7 +26,6 @@ export default function LandingPage() {
         </div>
       </nav>
       <section
-        key="1"
         className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-r from-white to-green-100"
       >
         <div className="container px-4 md:px-6">

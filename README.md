@@ -40,6 +40,7 @@ Analytics Platform for Competitive Programming
     - [6. View Names](#6-view-names)
     - [7. Functions and Procedures](#7-functions-and-procedures)
   - [Conventional commits](#conventional-commits)
+  - [Data standardization](#data-standardization)
   - [Docs](#docs)
 
 ## Technologies Used
@@ -71,15 +72,15 @@ yarn dev
 ## Install shadcn CLI
 
 ```bash
-npx shadcn-ui@latest init
-pnpm dlx shadcn-ui@latest init
+npx shadcn init
+pnpm dlx shadcn init
 ```
 
 ## Install components
 
 ```bash
-npx shadcn-ui@latest add $component
-pnpm dlx shadcn-ui@latest add $component
+npx shadcn add $component
+pnpm dlx shadcn add $component
 ```
 
 ## Use Supabase
@@ -223,6 +224,18 @@ Reviewed-by: Z
 Refs: #123
 ```
 
+## Data standardization
+
+- Problems:
+
+Time: Seconds
+Memory: Megabytes
+
+- Submissions:
+Time: Milliseconds
+Memory: Kilobytes
+Submit Time: hh:mm:ss
+
 ## Docs
 
 [Next.js 14 + @supabase/ssr: authencation, oauth, page protection,CRUD](https://www.youtube.com/watch?v=PdmKlne1gRY)
@@ -242,3 +255,7 @@ Refs: #123
 [Editable Table](https://muhimasri.com/blogs/react-editable-table/)
 
 [ORM](https://orm.drizzle.team/docs/get-started-postgresql#supabase)
+
+[shadcn/ui expansions](https://shadcnui-expansions.typeart.cc/docs)
+
+[Add and Remove Table Rows with React TanStack](https://muhimasri.com/blogs/add-remove-react-table-rows/)

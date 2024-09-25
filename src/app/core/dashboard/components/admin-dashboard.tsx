@@ -3,11 +3,11 @@ import { loadLookerDashboardUrl } from "../actions";
 export default async function AdminDashboard() {
   const url = await loadLookerDashboardUrl();
 
-  const width = "1400";
-  const height = "800";
+  const width = "100%";
+  const height = "840";
   return (
     <iframe
-      title="Looker Dashboard"
+      title="Admin Dashboard"
       width={width}
       height={height}
       src={url}
