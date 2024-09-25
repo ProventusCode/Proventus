@@ -157,9 +157,8 @@ export default function ContestMetadataForm({
                   Fecha y hora inicial <span className="text-red-500">*</span>
                 </FormLabel>
                 <DateTimePicker
+                  {...field}
                   placeholder="Fecha y hora inicial"
-                  value={field.value}
-                  onChange={field.onChange}
                   locale={es}
                 />
               </FormItem>
@@ -175,11 +174,9 @@ export default function ContestMetadataForm({
                   Fecha y hora final <span className="text-red-500">*</span>
                 </FormLabel>
                 <DateTimePicker
-                  placeholder="Fecha y hora final"
-                  // value={field.value}
-                  // onChange={field.onChange}
-                  locale={es}
                   {...field}
+                  placeholder="Fecha y hora final"
+                  locale={es}
                 />
               </FormItem>
             )}

@@ -29,6 +29,8 @@ import {
 } from "./components/table-headers/standings-headers";
 import { getSubmissionHeaders } from "./components/table-headers/submission-headers";
 
+export const runtime = 'edge'
+
 interface ContestRegisterPageProps extends Params {
   platform: string;
   contestId: string;
@@ -39,12 +41,10 @@ export default function ContestRegisterPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [contestMetadata, setContestMetadata] = useState<ContestType>();
   const [submissions, setSubmissions] = useState<SubmissionType[]>();
   const [problems, setProblems] = useState<ProblemType[]>();
-  const [contestStandings, setContestStandings] =
-    useState<ContestStandingType[]>();
+  const [contestStandings, setContestStandings] = useState<ContestStandingType[]>();
 
   useEffect(() => {
     async function initialize() {

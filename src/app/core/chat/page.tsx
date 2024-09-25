@@ -60,7 +60,6 @@ export default function CompetitiveProgrammingChat() {
     });
 
   useEffect(() => {
-    // Simulating fetching submissions
     setSubmissions([
       {
         id: "1",
