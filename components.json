@@ -10,7 +10,9 @@
     "cssVariables": true
   },
   "aliases": {
+    "lib": "@/lib",
     "components": "@/components",
+    "enums": "@/enums",
     "utils": "@/utils",
     "services": "@/services",
     "types": "@/types",
