@@ -1,7 +1,7 @@
 import { integer, serial, varchar } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
-import { audit } from "./Audit";
-import { problemSet } from "./ProblemSet";
+import { audit } from "./audit";
+import { problemSet } from "./problemSet";
 
 export const problem = schema.table("problem", {
   id: serial("id").primaryKey(),

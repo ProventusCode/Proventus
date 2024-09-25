@@ -1,4 +1,4 @@
-import { NewCompetitor } from "@/db/schema/Competitor";
+import { NewCompetitor } from "@/db/schema/competitor";
 import { ContestStandingType, SubmissionType } from "@/types/contest.types";
 
 export class CompetitorMapper {

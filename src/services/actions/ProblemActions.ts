@@ -1,7 +1,7 @@
 "use server";
 
 import { database } from "@/db/drizzle";
-import { NewProblem, problem, Problem } from "@/db/schema/Problem";
+import { NewProblem, problem, Problem } from "@/db/schema/problem";
 import { DatabaseUtils } from "@/utils/DatabaseUtils";
 
 export async function findProblemByContestId(

@@ -1,5 +1,5 @@
 import { DataTableCell } from "@/components/ui/data-table-cell";
-import { ProblemStatistic } from "@/db/schema/ContestStanding";
+import { ProblemStatistic } from "@/db/schema/contestStanding";
 import { ContestStandingType } from "@/types/contest.types";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Clock, FileX } from "lucide-react";

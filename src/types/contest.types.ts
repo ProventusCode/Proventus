@@ -1,4 +1,4 @@
-import { ProblemStatistic } from "@/db/schema/ContestStanding";
+import { ProblemStatistic } from "@/db/schema/contestStanding";
 
 export type ContestType = {
   contestId: string;

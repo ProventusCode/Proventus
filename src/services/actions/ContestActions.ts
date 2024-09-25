@@ -1,7 +1,7 @@
 "use server";
 
 import { database } from "@/db/drizzle";
-import { contest, Contest, NewContest } from "@/db/schema/Contest";
+import { contest, Contest, NewContest } from "@/db/schema/contest";
 import { DatabaseUtils } from "@/utils/DatabaseUtils";
 import { eq } from "drizzle-orm";
 

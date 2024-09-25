@@ -1,4 +1,4 @@
-import { NewProblem } from "@/db/schema/Problem";
+import { NewProblem } from "@/db/schema/problem";
 import { ProblemType } from "@/types/contest.types";
 import { StringUtils } from "@/utils/StringUtils";
 

@@ -1,8 +1,8 @@
 import { integer, json, serial, varchar } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
-import { competitor } from "./Competitor";
-import { audit } from "./Audit";
-import { contest } from "./Contest";
+import { competitor } from "./competitor";
+import { audit } from "./audit";
+import { contest } from "./contest";
 
 export interface ProblemStatistic {
   problemId: string;

@@ -1,7 +1,7 @@
 "use server";
 
 import { database } from "@/db/drizzle";
-import { competitor, NewCompetitor } from "@/db/schema/Competitor";
+import { competitor, NewCompetitor } from "@/db/schema/competitor";
 import { DatabaseUtils } from "@/utils/DatabaseUtils";
 
 export async function saveAllCompetitors(entities: NewCompetitor[]) {

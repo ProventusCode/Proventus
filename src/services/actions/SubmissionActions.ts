@@ -1,7 +1,7 @@
 "use server";
 
 import { database } from "@/db/drizzle";
-import { NewSubmission, submission, Submission } from "@/db/schema/Submission";
+import { NewSubmission, submission, Submission } from "@/db/schema/submission";
 import { DatabaseUtils } from "@/utils/DatabaseUtils";
 
 export async function findAllSubmission(): Promise<Submission[]> {

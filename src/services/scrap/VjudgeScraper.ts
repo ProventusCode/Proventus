@@ -1,4 +1,4 @@
-import { ProblemStatistic } from "@/db/schema/ContestStanding";
+import { ProblemStatistic } from "@/db/schema/contestStanding";
 import { PlatformEnum } from "@/enums/PlatformEnum";
 import {
   ContestStandingType,
@@ -9,6 +9,7 @@ import {
 
 import { DataUtils } from "@/utils/DataUtils";
 import { DateUtils } from "@/utils/DateUtils";
+import { ObjectUtils } from "@/utils/ObjectUtils";
 import { StringUtils } from "@/utils/StringUtils";
 import * as cheerio from "cheerio";
 import { ENDPOINTS } from "../endpoints";
@@ -19,7 +20,6 @@ import {
   VjudgeProblem,
   VjudgeSubmission,
 } from "./types/VjudgeResponses";
-import { ObjectUtils } from "@/utils/ObjectUtils";
 
 export class VjudgeScraper implements ScraperService {
   isValidContestId(contestId: string): boolean {

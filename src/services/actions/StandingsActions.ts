@@ -5,7 +5,7 @@ import {
   contestStanding,
   ContestStanding,
   NewContestStanding,
-} from "@/db/schema/ContestStanding";
+} from "@/db/schema/contestStanding";
 import { DatabaseUtils } from "@/utils/DatabaseUtils";
 
 export async function findAllSubmission(): Promise<ContestStanding[]> {

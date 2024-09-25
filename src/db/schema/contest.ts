@@ -1,7 +1,7 @@
 import { integer, serial, timestamp, varchar } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
-import { audit } from "./Audit";
-import { platformEnum } from "./Enums";
+import { audit } from "./audit";
+import { platformEnum } from "./enums";
 
 export const contest = schema.table("contest", {
   id: serial("id").primaryKey(),

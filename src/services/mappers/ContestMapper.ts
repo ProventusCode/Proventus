@@ -1,4 +1,4 @@
-import { Contest } from "@/db/schema/Contest";
+import { Contest } from "@/db/schema/contest";
 import { ContestType } from "@/types/contest.types";
 import { DateUtils } from "@/utils/DateUtils";
 

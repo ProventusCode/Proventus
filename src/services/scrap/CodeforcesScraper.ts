@@ -1,4 +1,5 @@
-import { ContestType, ProblemType, SubmissionType, ContestStandingType } from "@/types/contest.types";
+import { ContestStandingType, ContestType, ProblemType, SubmissionType } from "@/types/contest.types";
+
 import { ScraperService } from "./ScraperService";
 
 export class CodeforcesScraper implements ScraperService {

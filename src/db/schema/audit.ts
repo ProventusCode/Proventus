@@ -7,3 +7,4 @@ export const audit = {
     .defaultNow()
     .$onUpdate(() => new Date()),
 };
+  

@@ -1,14 +1,14 @@
 "use server";
 
 import { Option } from "@/components/ui/multiple-selector.ext";
-import { NewContest } from "@/db/schema/Contest";
+import { NewContest } from "@/db/schema/contest";
 import { saveAllCompetitors } from "@/services/actions/CompetitorActions";
 import { saveContest } from "@/services/actions/ContestActions";
 import { saveAllProblems } from "@/services/actions/ProblemActions";
 import { saveAllStandings } from "@/services/actions/StandingsActions";
 import { saveAllSubmission } from "@/services/actions/SubmissionActions";
-import { ProblemMapper } from "@/services/mappers/ProblemMapper";
 import { CompetitorMapper } from "@/services/mappers/CompetitorMapper";
+import { ProblemMapper } from "@/services/mappers/ProblemMapper";
 import { SubmissionMapper } from "@/services/mappers/SubmissionMapper";
 import { ScraperFactory } from "@/services/scrap/ScraperFactory";
 import {

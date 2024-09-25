@@ -1,6 +1,6 @@
 import { serial, varchar } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
-import { audit } from "./Audit";
+import { audit } from "./audit";
 
 export const competitor = schema.table("competitor", {
   id: serial("id").primaryKey(),

@@ -1,12 +1,12 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { competitor } from "./schema/Competitor";
-import { contest } from "./schema/Contest";
-import { contestStanding } from "./schema/ContestStanding";
-import { city, country, university } from "./schema/Location";
-import { problem } from "./schema/Problem";
-import { problemSet } from "./schema/ProblemSet";
-import { submission } from "./schema/Submission";
+import { competitor } from "./schema/competitor";
+import { contest } from "./schema/contest";
+import { contestStanding } from "./schema/contestStanding";
+import { city, country, university } from "./schema/location";
+import { problem } from "./schema/problem";
+import { problemSet } from "./schema/problemSet";
+import { submission } from "./schema/submission";
 
 const connectionString = process.env.POSTGRES_DRIZZLE_URL!;
 
