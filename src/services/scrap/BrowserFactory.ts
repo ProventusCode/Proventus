@@ -11,6 +11,8 @@ export async function getBrowser(): Promise<Browser> {
 
   return await puppeteer.launch({
     args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
       "--disable-infobars",
       "--no-first-run",
       "--ignore-certificate-errors",
