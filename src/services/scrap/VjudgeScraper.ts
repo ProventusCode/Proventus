@@ -135,7 +135,7 @@ export class VjudgeScraper implements ScraperService {
     const contestRankTable = "#contest-rank-table tbody tr";
     const element = await page
       .waitForSelector(contestRankTable, {
-        timeout: 5_000,
+        timeout: 30_000,
       })
       .then(
         (table) => table,
