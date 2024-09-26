@@ -11,13 +11,14 @@ export async function getBrowser(): Promise<Browser> {
 
   return await puppeteer.launch({
     args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--single-process',
       "--disable-infobars",
       "--no-first-run",
       "--ignore-certificate-errors",
       "--ignore-certificate-errors-skip-list",
-      "--disable-dev-shm-usage",
       "--disable-accelerated-2d-canvas",
       "--disable-gpu",
       "--hide-scrollbars",
