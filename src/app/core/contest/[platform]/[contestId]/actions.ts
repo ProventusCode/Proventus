@@ -18,6 +18,8 @@ import {
   SubmissionType,
 } from "@/types/contest.types";
 
+export const maxDuration = 30;
+
 interface ScrapResponse {
   contest: Promise<ContestType>;
   problems: Promise<ProblemType[]>;
