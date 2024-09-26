@@ -29,8 +29,6 @@ import {
 } from "./components/table-headers/standings-headers";
 import { getSubmissionHeaders } from "./components/table-headers/submission-headers";
 
-export const runtime = 'edge'
-
 interface ContestRegisterPageProps extends Params {
   platform: string;
   contestId: string;

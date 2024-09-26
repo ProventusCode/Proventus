@@ -3,7 +3,7 @@ const nextConfig = {
   crossOrigin: "anonymous",
   reactStrictMode: false,
   experimental: {
-    serverComponentsExternalPackages: ["puppeteer-core"],
+    serverComponentsExternalPackages: ["puppeteer-core", "@sparticuz/chromium"],
   },
   images: {
     dangerouslyAllowSVG: true,
