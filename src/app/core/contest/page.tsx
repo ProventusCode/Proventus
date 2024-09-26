@@ -14,7 +14,6 @@ export default function ContestsListPage() {
   useEffect(() => {
     async function initialize() {
       const contests = await findAllContest();
-      console.log(contests);
       setContests(ContestMapper.toContestTypeList(contests));
     }
     initialize();

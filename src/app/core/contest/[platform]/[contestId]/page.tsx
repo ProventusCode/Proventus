@@ -151,7 +151,7 @@ export default function ContestRegisterPage() {
             {standings ? (
               <div className="rounded-xl border shadow-lg">
                 <DataTable
-                  key={standings[0].universityName}
+                  key={standings[0]?.universityName}
                   data={standings}
                   columns={getStandingsHeaders()}
                   paginationSize={5}

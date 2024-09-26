@@ -9,20 +9,13 @@ export async function getBrowser(): Promise<Browser> {
       ? process.env.CHROMIUM_PATH
       : await chromium.executablePath();
 
+  const chromiumArgs =
+    process.env.APP_ENV === "local" ? puppeteer.defaultArgs() : chromium.args;
+
   return await puppeteer.launch({
-    args: [
-      "--no-sandbox",
-      "--disable-gpu",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--no-zygote",
-      "--disable-accelerated-2d-canvas",
-      "--disable-infobars",
-      "--single-process",
-    ],
+    args: chromiumArgs,
     defaultViewport: chromium.defaultViewport,
     executablePath: chromiumPath,
-    // headless: chromium.headless,
-    headless: false,
+    headless: chromium.headless,
   });
 }

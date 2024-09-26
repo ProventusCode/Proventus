@@ -127,10 +127,14 @@ export class VjudgeScraper implements ScraperService {
 
   async getContestStandings(contestId: string): Promise<ContestStandingType[]> {
     const url = `${ENDPOINTS.vjudge.contest}/${contestId}#rank`;
-
+    console.log("Loading page", url);
     const browser = await getBrowser();
     const page = await browser.newPage();
-    await page.goto(url);
+    await page
+      .goto(url, { waitUntil: "networkidle0", timeout: 60_000 })
+      .catch((e) => {
+        console.error(e);
+      });
 
     console.log("Page loaded - waiting for table");
     const contestRankTable = "#contest-rank-table tbody tr";
