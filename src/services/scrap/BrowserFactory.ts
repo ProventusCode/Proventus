@@ -8,10 +8,9 @@ export async function getBrowser(): Promise<Browser> {
     process.env.APP_ENV === "local"
       ? process.env.CHROMIUM_PATH
       : await chromium.executablePath();
-  
+
   return await puppeteer.launch({
     args: [
-      "--disable-setuid-sandbox",
       "--disable-infobars",
       "--no-first-run",
       "--ignore-certificate-errors",
