@@ -14,7 +14,11 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { saveScrapedContest, scrapContest } from "./actions";
+import {
+  saveScrapedContest,
+  scrapContest,
+  setUniversityNames,
+} from "./actions";
 import ContestMetadataForm, {
   contestFormSchema,
 } from "./components/contest-metadata-form";
@@ -42,7 +46,7 @@ export default function ContestRegisterPage() {
   const [contestMetadata, setContestMetadata] = useState<ContestType>();
   const [submissions, setSubmissions] = useState<SubmissionType[]>();
   const [problems, setProblems] = useState<ProblemType[]>();
-  const [contestStandings, setContestStandings] = useState<ContestStandingType[]>();
+  const [standings, setStandings] = useState<ContestStandingType[]>();
 
   useEffect(() => {
     async function initialize() {
@@ -57,8 +61,9 @@ export default function ContestRegisterPage() {
       });
       submissions.then(setSubmissions);
       standings.then((standings) => {
-        setContestStandings(standings);
+        setStandings(standings);
         setProblemsStatsHeaders(standings?.[0]?.problemStatistics);
+        setUniversityNames(platform, standings).then(setStandings);
       });
     }
     initialize();
@@ -71,7 +76,7 @@ export default function ContestRegisterPage() {
       contestMetadata,
       problems,
       submissions,
-      standings: contestStandings,
+      standings,
     });
     toast({
       title: "Guardado en proceso",
@@ -143,13 +148,14 @@ export default function ContestRegisterPage() {
             value="standings"
             className="flex flex-col items-center justify-center gap-4"
           >
-            {contestStandings ? (
+            {standings ? (
               <div className="rounded-xl border shadow-lg">
                 <DataTable
-                  data={contestStandings}
+                  key={standings[0].universityName}
+                  data={standings}
                   columns={getStandingsHeaders()}
                   paginationSize={5}
-                  handleOriginalDataUpdate={setContestStandings}
+                  handleOriginalDataUpdate={setStandings}
                 />
               </div>
             ) : (

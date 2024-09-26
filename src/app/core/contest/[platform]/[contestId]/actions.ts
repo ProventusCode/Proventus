@@ -11,6 +11,7 @@ import { CompetitorMapper } from "@/services/mappers/CompetitorMapper";
 import { ProblemMapper } from "@/services/mappers/ProblemMapper";
 import { SubmissionMapper } from "@/services/mappers/SubmissionMapper";
 import { ScraperFactory } from "@/services/scrap/ScraperFactory";
+import { VjudgeScraper } from "@/services/scrap/VjudgeScraper";
 import {
   ContestStandingType,
   ContestType,
@@ -37,6 +38,17 @@ export async function scrapContest(
   const standings = scraperService.getContestStandings(contestId);
 
   return { contest, problems, submissions, standings };
+}
+
+export async function setUniversityNames(
+  platform: string,
+  standings: ContestStandingType[]
+): Promise<ContestStandingType[]> {
+  const scraperService = ScraperFactory.getCreator(platform);
+  if (scraperService instanceof VjudgeScraper) {
+    return await scraperService.setUniversityNames(standings);
+  }
+  return standings;
 }
 
 interface ContestRequest {

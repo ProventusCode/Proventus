@@ -6,6 +6,8 @@ import { Clock, FileX } from "lucide-react";
 import { EditCell } from "./edit-cell";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { StringUtils } from "@/utils/StringUtils";
+import { Icons } from "@/components/ui/icons";
 
 const columnHelper = createColumnHelper<ContestStandingType>();
 
@@ -44,6 +46,9 @@ const standingsHeaders = [
     meta: {
       type: "string",
       customStyle: (value: string) => {
+        if (StringUtils.isEmptyString(value)) {
+          return <Icons.Spinner className="ml-6 h-6 w-6 animate-spin" />;
+        }
         return <Badge variant="secondary">{value}</Badge>;
       },
     },

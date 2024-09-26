@@ -132,10 +132,11 @@ export class VjudgeScraper implements ScraperService {
     const page = await browser.newPage();
     await page.goto(url);
 
+    console.log("Page loaded - waiting for table");
     const contestRankTable = "#contest-rank-table tbody tr";
     const element = await page
       .waitForSelector(contestRankTable, {
-        timeout: 30_000,
+        timeout: 60_000,
       })
       .then(
         (table) => table,
@@ -143,9 +144,12 @@ export class VjudgeScraper implements ScraperService {
       );
 
     if (!element) {
+      console.log("Table not found after 60s - returning empty array");
       browser.close();
       return [];
     }
+
+    console.log("Table found - parsing");
 
     const html = await page.content();
     const $ = cheerio.load(html);
@@ -177,12 +181,21 @@ export class VjudgeScraper implements ScraperService {
         totalTime: Number($row.find(".penalty > .minute").text().trim()),
         problemStatistics: problemStatistics,
       };
-      this.extractUniversityName(standing.userName).then((universityName) => {
-        standing.universityName =
-          DataUtils.normalizeUniversityName(universityName);
-      });
       standings.push(standing);
     });
+    console.log("Table parsed - returning standings", standings.length);
+    return standings;
+  }
+
+  async setUniversityNames(
+    standings: ContestStandingType[]
+  ): Promise<ContestStandingType[]> {
+    for (const standing of standings) {
+      const universityName = await this.extractUniversityName(
+        standing.userName
+      );
+      standing.universityName = universityName;
+    }
     return standings;
   }
 
@@ -191,7 +204,9 @@ export class VjudgeScraper implements ScraperService {
     const response = await fetch(url);
     const html = await response.text();
     const $ = cheerio.load(html);
-    return $(".user-info > dd:nth-child(6)").text().trim();
+    return DataUtils.normalizeUniversityName(
+      $(".user-info > dd:nth-child(6)").text().trim()
+    );
   }
 
   private parseProblemResult(problemResult: string) {
