@@ -127,37 +127,24 @@ export class VjudgeScraper implements ScraperService {
 
   async getContestStandings(contestId: string): Promise<ContestStandingType[]> {
     const url = `${ENDPOINTS.vjudge.contest}/${contestId}#rank`;
-    console.log("Loading page", url);
-    const browser = await getBrowser();
-    const page = await browser.newPage();
-    await page
-      .goto(url, { waitUntil: "networkidle0", timeout: 60_000 })
-      .catch((e) => {
-        console.error(e);
-      });
 
-    console.log("Page loaded - waiting for table");
     const contestRankTable = "#contest-rank-table tbody tr";
-    const element = await page
-      .waitForSelector(contestRankTable, {
-        timeout: 60_000,
-      })
-      .then(
-        (table) => table,
-        () => null
-      );
+    const result = await fetch(ENDPOINTS.proxy, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        apikey: process.env.WINTR_API_KEY,
+        method: "GET",
+        url: url,
+        jsrender: true,
+        waitfor: contestRankTable,
+      }),
+    });
 
-    if (!element) {
-      console.log("Table not found after 60s - returning empty array");
-      browser.close();
-      return [];
-    }
-
-    console.log("Table found - parsing");
-
-    const html = await page.content();
-    const $ = cheerio.load(html);
-    browser.close();
+    const response = await result.json();
+    const $ = cheerio.load(response.content);
 
     const $table = $(contestRankTable);
     const standings: ContestStandingType[] = [];
@@ -187,7 +174,6 @@ export class VjudgeScraper implements ScraperService {
       };
       standings.push(standing);
     });
-    console.log("Table parsed - returning standings", standings.length);
     return standings;
   }
 

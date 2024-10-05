@@ -144,7 +144,7 @@ export default function CompetitiveProgrammingChat() {
                   <div className="font-medium">{submission.problem}</div>
                   <div className="text-sm text-muted-foreground">
                     <p>Resultado: {submission.status}</p>
-                    <p>Tiempo:{submission.executionTime} ms</p>
+                    <p>Tiempo: {submission.executionTime} ms</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">

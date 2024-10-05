@@ -2,26 +2,31 @@
 
 import {
   Breadcrumb,
-  BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
+  BreadcrumbList,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Package2Icon, User } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const router = useRouter();
+  const supabase = createSupabaseBrowserClient();
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+  };
   return (
     <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
       <Link className="lg:hidden" href="#">
@@ -32,9 +37,8 @@ export default function Header() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              {/* <BreadcrumbLink href="/">Home</BreadcrumbLink> */}
             </BreadcrumbItem>
-
           </BreadcrumbList>
         </Breadcrumb>
       </div>
@@ -50,12 +54,13 @@ export default function Header() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
+          <DropdownMenuItem>Configuraciones</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
+          <DropdownMenuItem className="text-red-600" onClick={handleSignOut}>
+            Cerrar sesión
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

@@ -4,9 +4,8 @@ import {
   AppWindow,
   Blocks,
   Code,
-  LineChartIcon,
   LucideMessageCircleCode,
-  UsersIcon,
+  UsersIcon
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

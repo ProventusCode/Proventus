@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
@@ -26,7 +27,6 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { signUpWithEmailAndPassword } from "../actions";
 import OAuthForm from "./oauth-form";
-import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z
   .object({
@@ -57,16 +57,16 @@ export default function SignUpForm() {
   const onSubmit = async (credentials: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     const response = await signUpWithEmailAndPassword(credentials);
-    if (response.error !== null) {
+    if (response) {
       toast({
         variant: "destructive",
-        title: "Error al iniciar sesión",
-        description: "Ha ocurrido un error inesperado",
+        title: "Error en la creación de la cuenta",
+        description: "Ha ocurrido un error inesperado. Inténtalo de nuevo",
       });
     } else {
       toast({
-        title: "Cuenta creada",
-        description: "Tu cuenta ha sido creada exitosamente",
+        title: "Cuenta creada exitosamente",
+        description: "Se ha enviado un correo de verificación a tu email",
       });
     }
     setIsLoading(false);

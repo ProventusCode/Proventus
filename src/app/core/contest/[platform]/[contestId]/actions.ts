@@ -4,6 +4,7 @@ import { Option } from "@/components/ui/multiple-selector.ext";
 import { NewContest } from "@/db/schema/contest";
 import { saveAllCompetitors } from "@/services/actions/CompetitorActions";
 import { saveContest } from "@/services/actions/ContestActions";
+import { selectAllEnumValues } from "@/services/actions/EnumActions";
 import { saveAllProblems } from "@/services/actions/ProblemActions";
 import { saveAllStandings } from "@/services/actions/StandingsActions";
 import { saveAllSubmission } from "@/services/actions/SubmissionActions";
@@ -78,45 +79,10 @@ export async function saveScrapedContest(
   }
 }
 
-const TAGS = [
-  { label: "DP", value: "DP" },
-  { label: "Graph", value: "Graph" },
-  { label: "Math", value: "Math" },
-  { label: "Greedy", value: "Greedy" },
-  { label: "String", value: "String" },
-  { label: "Implementation", value: "Implementation" },
-  { label: "Data Structures", value: "Data Structures" },
-  { label: "BFS", value: "BFS" },
-  { label: "DFS", value: "DFS" },
-  { label: "Binary Search", value: "Binary Search" },
-  { label: "Two Pointers", value: "Two Pointers" },
-  { label: "Bit Manipulation", value: "Bit Manipulation" },
-  { label: "Divide and Conquer", value: "Divide and Conquer" },
-  { label: "Dynamic Programming", value: "Dynamic Programming" },
-  { label: "Backtracking", value: "Backtracking" },
-  { label: "Stack", value: "Stack" },
-  { label: "Queue", value: "Queue" },
-  { label: "Priority Queue", value: "Priority Queue" },
-  { label: "Heap", value: "Heap" },
-  { label: "Hash Table", value: "Hash Table" },
-  { label: "Set", value: "Set" },
-  { label: "Map", value: "Map" },
-  { label: "Tree", value: "Tree" },
-  { label: "Binary Tree", value: "Binary Tree" },
-  { label: "Binary Search Tree", value: "Binary Search Tree" },
-  { label: "Segment Tree", value: "Segment Tree" },
-  { label: "Fenwick Tree", value: "Fenwick Tree" },
-  { label: "Trie", value: "Trie" },
-  { label: "Graph Theory", value: "Graph Theory" },
-  { label: "Shortest Path", value: "Shortest Path" },
-  { label: "Minimum Spanning Tree", value: "Minimum Spanning Tree" },
-  { label: "Topological Sort", value: "Topological Sort" },
-];
-
 export async function getTags(): Promise<Option[]> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(TAGS);
-    }, 1000);
-  });
+  const tags = await selectAllEnumValues("tag_enum");
+  return tags.map((row) => ({
+    label: row.label,
+    value: row.label,
+  }));
 }

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import AuthForm from "./components/auth-form";
 import { redirect } from "next/navigation";
-import readUserSession from "@/lib/supabase/actions";
+import readUser from "@/lib/supabase/actions";
 
 export const metadata: Metadata = {
   title: "Iniciar sesión | Proventus",
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AuthenticationPage() {
-  const { data } = await readUserSession();
+  const { data } = await readUser();
   if (data.session) {
     return redirect("/submissions");
   }

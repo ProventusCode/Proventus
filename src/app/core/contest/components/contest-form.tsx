@@ -102,11 +102,8 @@ export function ContestForm() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          type="button"
-          className="bg-transparent text-black outline-2 outline-dashed outline-green-500 hover:text-white"
-        >
-          Nuevo contest
+        <Button type="button">
+          Agregar competencia
           <PlusIcon className="w-4 h-4 ml-2" />
         </Button>
       </DialogTrigger>
