@@ -1,6 +1,9 @@
 "use server";
 
 import createSupabaseServerClient from "@/lib/supabase/server";
+import { saveUserRole } from "@/services/actions/UserRoleActions";
+import { UUID } from "crypto";
+import { redirect } from "next/navigation";
 
 interface Credentials {
   email: string;
@@ -11,7 +14,7 @@ interface Credentials {
 export async function signUpWithEmailAndPassword(credentials: Credentials) {
   const supabase = await createSupabaseServerClient();
 
-  const { error } = await supabase.auth.signUp({
+  const response = await supabase.auth.signUp({
     email: credentials.email,
     password: credentials.password,
     options: {
@@ -21,9 +24,15 @@ export async function signUpWithEmailAndPassword(credentials: Credentials) {
     },
   });
 
-  if (error) {
+  if (response.error) {
+    console.error("Error in signUpWithEmailAndPassword:", response.error);
     return "Ha ocurrido un error inesperado. Inténtalo de nuevo";
   }
+
+  const userId = response.data?.user?.id as UUID;
+  await saveUserRole(userId);
+
+  redirect("/core/");
 }
 
 export async function signInWithEmailAndPassword(credentials: Credentials) {

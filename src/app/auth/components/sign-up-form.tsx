@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { signUpWithEmailAndPassword } from "../actions";
 import OAuthForm from "./oauth-form";
+import router, { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -61,12 +62,12 @@ export default function SignUpForm() {
       toast({
         variant: "destructive",
         title: "Error en la creación de la cuenta",
-        description: "Ha ocurrido un error inesperado. Inténtalo de nuevo",
+        description: response,
       });
     } else {
       toast({
         title: "Cuenta creada exitosamente",
-        description: "Se ha enviado un correo de verificación a tu email",
+        description: "Ya te encuentras logueado en tu cuenta",
       });
     }
     setIsLoading(false);

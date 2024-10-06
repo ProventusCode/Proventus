@@ -7,6 +7,7 @@ import { city, country, university } from "./schema/location";
 import { problem } from "./schema/problem";
 import { problemSet } from "./schema/problemSet";
 import { submission } from "./schema/submission";
+import { userRole } from "./schema/userRole";
 
 const connectionString = process.env.POSTGRES_DRIZZLE_URL!;
 
@@ -20,6 +21,7 @@ export const databaseSchema = {
   university,
   city,
   country,
+  userRole,
 };
 
 export const client = postgres(connectionString);

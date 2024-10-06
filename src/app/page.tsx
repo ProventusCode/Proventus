@@ -6,12 +6,25 @@ export default function LandingPage() {
   const platforms = [
     {
       src: "/platforms/codeforces.svg",
+      href: "https://codeforces.com/",
       alt: "Codeforces",
       width: 300,
       height: 100,
     },
-    { src: "/platforms/vjudge.png", alt: "Vjudge", width: 150, height: 100 },
-    { src: "/platforms/icpc.svg", alt: "ICPC", width: 250, height: 100 },
+    {
+      src: "/platforms/vjudge.png",
+      href: "https://vjudge.net/",
+      alt: "Vjudge",
+      width: 150,
+      height: 100,
+    },
+    {
+      src: "/platforms/icpc.svg",
+      href: "https://icpc.global/regionals/upcoming",
+      alt: "ICPC",
+      width: 250,
+      height: 100,
+    },
   ];
 
   return (
@@ -21,10 +34,10 @@ export default function LandingPage() {
           <Link href="#" className="text-xl font-bold text-green-700">
             Proventus
           </Link>
-          <Link href="#" className="text-sm hover:underline text-green-700">
-            Acerca de
-          </Link>
-          <Link href="#" className="text-sm hover:underline text-green-700">
+          <Link
+            href="https://logdev.netlify.app/posts/conceptoscpp/"
+            className="text-sm hover:underline text-green-700"
+          >
             Blog
           </Link>
         </div>
@@ -42,7 +55,7 @@ export default function LandingPage() {
         <div className="grid gap-12 lg:grid-cols-2 items-center">
           <div className="flex flex-col justify-center space-y-6">
             <h1 className="text-3xl md:text-5xl font-bold tracking-tighter text-green-900">
-              Análisis Inteligente para Programadores Competitivos
+              Análisis inteligente para programadores competitivos
             </h1>
             <p className="text-lg text-gray-700 max-w-[600px]">
               Automatiza la extracción de concursos, accede a estadísticas
@@ -51,7 +64,7 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="#"
+                href="/auth"
                 className="inline-flex h-12 items-center justify-center rounded-md bg-green-700 px-8 text-sm font-medium text-white shadow transition-colors hover:bg-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700"
               >
                 Empezar ahora
@@ -75,14 +88,16 @@ export default function LandingPage() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center justify-items-center">
           {platforms.map((logo) => (
-            <Image
-              key={logo.alt}
-              src={logo.src}
-              alt={logo.alt}
-              width={logo.width}
-              height={logo.height}
-              className="max-w-full max-h-full object-contain"
-            />
+            <a key={logo.src} href={logo.href} target="_blank">
+              <Image
+                key={logo.alt}
+                src={logo.src}
+                alt={logo.alt}
+                width={logo.width}
+                height={logo.height}
+                className="max-w-full max-h-full object-contain"
+              />
+            </a>
           ))}
         </div>
       </section>
@@ -92,7 +107,7 @@ export default function LandingPage() {
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <Image
               src="/sections/scrap.jpg"
-              alt="Web Scraping"
+              alt="WebScraping"
               width={800}
               height={720}
               className="max-w-full max-h-full object-contain border-2 border-green-500 rounded-xl shadow-2xl drop-shadow-2xl"
@@ -112,17 +127,17 @@ export default function LandingPage() {
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div className="space-y-4 order-last lg:order-first">
               <h2 className="text-2xl md:text-4xl font-bold tracking-tighter text-green-900">
-                Análisis de resultados con estadísticas descriptivas
+                Análisis de resultados con estadística descriptiva
               </h2>
               <p className="text-lg text-gray-700">
-                Comprende mejor tus datos con nuestra herramienta de
-                estadísticas descriptivas. Proporciona un análisis detallado de
-                tus datos para ayudarte a tomar decisiones informadas.
+                Comprende mejor tus datos con nuestra herramienta de estadística
+                descriptiva. Proporciona un análisis detallado de tus datos para
+                ayudarte a tomar decisiones informadas.
               </p>
             </div>
             <Image
-              src="/sections/3.jpg"
-              alt="Estadísticas"
+              src="/sections/dashboard.jpg"
+              alt="Dashboard"
               width={800}
               height={720}
               className="max-w-full max-h-full object-contain border-2 border-green-600 rounded-xl shadow-2xl drop-shadow-2xl"
@@ -132,14 +147,14 @@ export default function LandingPage() {
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <Image
               src="/sections/chat.png"
-              alt="Recomendaciones Personalizadas"
+              alt="Chatbot"
               width={800}
               height={720}
               className="max-w-full max-h-full object-contain border-2 border-green-700 rounded-xl shadow-2xl drop-shadow-2xl"
             />
             <div className="space-y-4">
               <h2 className="text-2xl md:text-4xl font-bold tracking-tighter text-green-900">
-                Recomendaciones Personalizadas
+                Recomendaciones personalizadas
               </h2>
               <p className="text-lg text-gray-700">
                 Recibe sugerencias adaptadas a tu código para identificar tus
@@ -163,7 +178,7 @@ export default function LandingPage() {
             </div>
             <Image
               src="/sections/management.jpg"
-              alt="Predicciones IA"
+              alt="Management"
               width={800}
               height={720}
               className="max-w-full max-h-full object-contain border-2 border-green-800 rounded-xl shadow-2xl drop-shadow-2xl"
@@ -179,11 +194,14 @@ export default function LandingPage() {
           </h2>
           <p className="text-lg text-center">
             Hecho para cualquier persona que quiera mejorar sus habilidades de
-            programación competitiva!
+            programación
           </p>
-          <Button className="bg-green-700 text-white px-8 py-4 text-lg rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50">
+          <a
+            href="/auth"
+            className="bg-green-700 text-white px-8 py-4 text-lg rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
+          >
             ¡Comienza ahora!
-          </Button>
+          </a>
         </div>
       </section>
     </div>

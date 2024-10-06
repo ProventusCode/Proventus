@@ -1,6 +1,5 @@
 export enum PlatformEnum {
-  VJUDDE = "VJUDGE",
-  CODEFORCES = "CODEFORCES",
-  ICPC = "ICPC",
-  RPC = "RPC",
+  VJUDDE = "Vjudge",
+  CODEFORCES = "Codeforces",
+  ICPC = "Icpc",
 }

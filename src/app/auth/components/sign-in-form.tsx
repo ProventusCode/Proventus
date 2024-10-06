@@ -99,7 +99,7 @@ export default function SignInForm() {
             />
             <div className="grid pt-6">
               <Button type="submit" disabled={isLoading}>
-                Registrarse{" "}
+                Entrar{" "}
                 {isLoading && (
                   <Icons.Spinner className="ml-2 h-4 w-4 animate-spin" />
                 )}
@@ -109,7 +109,6 @@ export default function SignInForm() {
         </Form>
       </CardContent>
       <CardFooter className="grid gap-4">
-        <Button>Entrar</Button>
         <OAuthForm />
         <Link
           className="text-sm text-muted-foreground text-center underline underline-offset-4 hover:text-primary"
