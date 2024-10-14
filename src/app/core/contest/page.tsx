@@ -5,7 +5,7 @@ import { findAllContest } from "@/services/actions/ContestActions";
 import { ContestMapper } from "@/services/mappers/ContestMapper";
 import { ContestType } from "@/types/contest.types";
 import { useEffect, useState } from "react";
-import SkeletonTable from "./[platform]/[contestId]/components/skeleton-table";
+import SkeletonTable from "../../../components/ui/skeleton-table";
 import { ContestForm } from "./components/contest-form";
 import { getContestHeaders } from "./components/contest-headers";
 

@@ -15,7 +15,7 @@ It's safe to trust getUser() because it sends a request to the
 Supabase Auth server every time to revalidate the Auth token.
 */
 
-export default async function readUser() {
+export async function readUser() {
   const supabase = await createSupabaseServerClient();
   return await supabase.auth.getUser();
 }

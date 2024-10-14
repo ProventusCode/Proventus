@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Trash2, UserPlus, Edit, Code2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Icons } from "@/components/ui/icons";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import SkeletonTable from "@/components/ui/skeleton-table";
 import {
   Table,
   TableBody,
@@ -12,73 +13,49 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { UserInfoDTO } from "@/db/schema/user";
+import { RoleEnum } from "@/enums/RoleEnum";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  findAllUser,
+  updateUserInfo,
+} from "@/services/actions/UserInfoActions";
+import { updateUserRole } from "@/services/actions/UserRoleActions";
+import { UserMapper } from "@/services/mappers/UserMapper";
+import { UserType } from "@/types/contest.types";
+import { Edit } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import UserForm from "./components/user-form";
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  university: string;
-  role: "Admin" | "Profesor" | "Estudiante";
-}
+const roleMap: Record<string, string> = {
+  [RoleEnum.ADMIN]: "Admin",
+  [RoleEnum.PROFESSOR]: "Profesor",
+  [RoleEnum.STUDENT]: "Estudiante",
+};
+
+const bgMap: Record<string, string> = {
+  [RoleEnum.ADMIN]: "bg-red-300",
+  [RoleEnum.PROFESSOR]: "bg-yellow-300",
+  [RoleEnum.STUDENT]: "bg-green-300",
+};
 
 export default function UserManagement() {
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: 1,
-      name: "Ana García",
-      email: "ana@universidad.edu",
-      university: "Universidad A",
-      role: "Admin",
-    },
-    {
-      id: 2,
-      name: "Carlos López",
-      email: "carlos@universidad.edu",
-      university: "Universidad B",
-      role: "Profesor",
-    },
-    {
-      id: 3,
-      name: "María Rodríguez",
-      email: "maria@universidad.edu",
-      university: "Universidad C",
-      role: "Estudiante",
-    },
-  ]);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<UserInfoDTO[]>();
+  const [editingUser, setEditingUser] = useState<UserType | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
-  const handleDeleteUser = (id: number) => {
-    setUsers(users.filter((user) => user.id !== id));
-  };
+  useEffect(() => {
+    findAllUser().then((users) => {
+      setUsers(users);
+      setIsSaving(false);
+    });
+  }, [isSaving]);
 
-  const handleRoleChange = (
-    id: number,
-    newRole: "Admin" | "Profesor" | "Estudiante"
-  ) => {
-    setUsers(
-      users.map((user) => (user.id === id ? { ...user, role: newRole } : user))
-    );
-  };
-
-  const handleSaveUser = (user: User) => {
+  const handleSaveUser = (user: UserType) => {
     if (editingUser) {
-      setUsers(users.map((u) => (u.id === user.id ? user : u)));
-    } else {
-      setUsers([...users, { ...user, id: users.length + 1 }]);
+      updateUserInfo(UserMapper.toNewUserInfo(user));
+      updateUserRole(UserMapper.toUpdateUserRole(user));
+      setIsSaving(true);
     }
     setEditingUser(null);
   };
@@ -87,150 +64,76 @@ export default function UserManagement() {
     <div className="w-full max-w-5xl mx-auto p-4">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Gestión de usuarios</h1>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button onClick={() => setEditingUser(null)}>
-              <UserPlus className="mr-2 h-4 w-4" /> Agregar usuario
-            </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <UserForm user={editingUser} onSave={handleSaveUser} />
-          </SheetContent>
-        </Sheet>
+        <Button asChild variant="outline" type="button">
+          <Link target="_blank" href="https://supabase.com/dashboard/projects">
+            <Icons.Supabase className="mr-2 h-8 w-8" /> Ir a Supabase
+          </Link>
+        </Button>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nombre</TableHead>
-              <TableHead>Correo</TableHead>
-              <TableHead>Universidad</TableHead>
-              <TableHead>Rol</TableHead>
-              <TableHead>Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.university}</TableCell>
-                <TableCell>
-                  <Select
-                    value={user.role}
-                    onValueChange={(
-                      value: "Admin" | "Profesor" | "Estudiante"
-                    ) => handleRoleChange(user.id, value)}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Seleccionar rol" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Admin">Admin</SelectItem>
-                      <SelectItem value="Profesor">Profesor</SelectItem>
-                      <SelectItem value="Estudiante">Estudiante</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </TableCell>
-                <TableCell>
-                  <div className="flex space-x-2">
-                    <Sheet>
-                      <SheetTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => setEditingUser(user)}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                      </SheetTrigger>
-                      <SheetContent>
-                        <UserForm user={user} onSave={handleSaveUser} />
-                      </SheetContent>
-                    </Sheet>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      onClick={() => handleDeleteUser(user.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
+      <div className="rounded-xl border">
+        {users ? (
+          <Table key={Number(editingUser)}>
+            <TableHeader className="bg-gray-50">
+              <TableRow>
+                {["Nombre", "Correo", "Universidad", "Rol", ""].map(
+                  (header) => (
+                    <TableHead key={header} className="text-center font-bold">
+                      {header}
+                    </TableHead>
+                  )
+                )}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {users?.map((user) => (
+                <TableRow key={user.id} className="text-center">
+                  <TableCell>
+                    <Badge variant="secondary"> {user.name}</Badge>
+                  </TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline"> {user.university?.name}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className={bgMap[user.userRole.role]}
+                    >
+                      {roleMap[user.userRole.role]}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      <Sheet>
+                        <SheetTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() =>
+                              setEditingUser(UserMapper.toUserType(user))
+                            }
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </SheetTrigger>
+                        <SheetContent>
+                          <UserForm
+                            user={UserMapper.toUserType(user)}
+                            onSave={handleSaveUser}
+                          />
+                        </SheetContent>
+                      </Sheet>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <SkeletonTable columns={5} rows={5} prefix="users" />
+        )}
       </div>
     </div>
-  );
-}
-
-interface UserFormProps {
-  user: User | null;
-  onSave: (user: User) => void;
-}
-
-function UserForm({ user, onSave }: UserFormProps) {
-  const [formData, setFormData] = useState<User>(
-    user || { id: 0, name: "", email: "", university: "", role: "Estudiante" }
-  );
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <SheetHeader>
-        <SheetTitle>{user ? "Editar Usuario" : "Agregar Usuario"}</SheetTitle>
-      </SheetHeader>
-      <Input
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        placeholder="Nombre"
-        required
-      />
-      <Input
-        name="email"
-        type="email"
-        value={formData.email}
-        onChange={handleChange}
-        placeholder="Correo"
-        required
-      />
-      <Input
-        name="university"
-        value={formData.university}
-        onChange={handleChange}
-        placeholder="Universidad"
-        required
-      />
-      <Select
-        value={formData.role}
-        onValueChange={(value: "Admin" | "Profesor" | "Estudiante") =>
-          setFormData({ ...formData, role: value })
-        }
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Seleccionar rol" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="Admin">Admin</SelectItem>
-          <SelectItem value="Profesor">Profesor</SelectItem>
-          <SelectItem value="Estudiante">Estudiante</SelectItem>
-        </SelectContent>
-      </Select>
-      <Button type="submit" className="w-full">
-        {user ? "Guardar Cambios" : "Agregar Usuario"}
-      </Button>
-    </form>
   );
 }

@@ -1,0 +1,2 @@
+ALTER TABLE "analytics"."contest_standing" ALTER COLUMN "problem_statistics" SET DATA TYPE jsonb;--> statement-breakpoint
+ALTER TABLE "analytics"."role_resource" ALTER COLUMN "resources" SET DATA TYPE jsonb;

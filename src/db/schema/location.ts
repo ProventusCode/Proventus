@@ -1,23 +1,23 @@
-import { varchar } from "drizzle-orm/pg-core";
+import { text } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
 
 export const country = schema.table("country", {
-  code: varchar("code", { length: 3 }).notNull().unique(),
-  name: varchar("name", { length: 256 }).notNull(),
+  code: text("code").notNull().unique(),
+  name: text("name").notNull(),
 });
 
 export const city = schema.table("city", {
-  code: varchar("code", { length: 5 }).notNull().unique(),
-  name: varchar("name", { length: 256 }).notNull(),
-  countryCode: varchar("country_code", { length: 3 })
+  code: text("code").notNull().unique(),
+  name: text("name").notNull(),
+  countryCode: text("country_code")
     .notNull()
     .references(() => country.code),
 });
 
 export const university = schema.table("university", {
-  code: varchar("code", { length: 5 }).notNull().unique(),
-  name: varchar("name", { length: 256 }).notNull(),
-  cityCode: varchar("city_code", { length: 5 })
+  code: text("code").notNull().unique(),
+  name: text("name").notNull(),
+  cityCode: text("city_code")
     .notNull()
     .references(() => city.code),
 });

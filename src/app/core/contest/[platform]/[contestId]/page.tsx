@@ -22,7 +22,7 @@ import {
 import ContestMetadataForm, {
   contestFormSchema,
 } from "./components/contest-metadata-form";
-import SkeletonTable from "./components/skeleton-table";
+import SkeletonTable from "../../../../../components/ui/skeleton-table";
 import {
   getProblemHeaders,
   setProblemTags,

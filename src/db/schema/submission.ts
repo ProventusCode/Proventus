@@ -1,4 +1,4 @@
-import { integer, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { integer, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
 import { audit } from "./audit";
 import { competitor } from "./competitor";
@@ -9,20 +9,20 @@ import { problem } from "./problem";
 export const submission = schema.table("submission", {
   id: serial("id").primaryKey(),
   submissionId: integer("submission_id").notNull().unique(),
-  contestId: varchar("contest_id", { length: 32 })
+  contestId: text("contest_id")
     .notNull()
     .references(() => contest.contestId),
-  userName: varchar("user_name", { length: 64 })
+  userName: text("user_name")
     .notNull()
     .references(() => competitor.name),
-  problemId: varchar("problem_id")
+  problemId: text("problem_id")
     .notNull()
     .references(() => problem.problemId),
   codeLength: integer("code_length"),
   memoryConsumed: integer("memory_consumed"),
   timeConsumed: integer("time_consumed"),
   result: judgeResultEnum("result"),
-  language: varchar("language", { length: 64 }),
+  language: text("language"),
   sourceCode: text("source_code"),
   submissionDateTime: timestamp("submission_date").notNull(),
   ...audit,

@@ -7,7 +7,9 @@ import { city, country, university } from "./schema/location";
 import { problem } from "./schema/problem";
 import { problemSet } from "./schema/problemSet";
 import { submission } from "./schema/submission";
-import { userRole } from "./schema/userRole";
+import { userRole, userRoleRelations } from "./schema/userRole";
+import { roleResource, roleResourceRelations } from "./schema/roleResource";
+import { userInfo, userInfoRelations } from "./schema/user";
 
 const connectionString = process.env.POSTGRES_DRIZZLE_URL!;
 
@@ -21,10 +23,18 @@ export const databaseSchema = {
   university,
   city,
   country,
+  userInfo,
   userRole,
+  roleResource,
+};
+
+export const relations = {
+  userRoleRelations,
+  roleResourceRelations,
+  userInfoRelations,
 };
 
 export const client = postgres(connectionString);
 export const database = drizzle(client, {
-  schema: databaseSchema,
+  schema: { ...databaseSchema, ...relations },
 });

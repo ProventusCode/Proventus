@@ -1,35 +1,33 @@
 "use server";
 
 import { database } from "@/db/drizzle";
-import { UserRole, userRole } from "@/db/schema/userRole";
-import { RoleEnum } from "@/enums/RoleEnum";
-import { UUID } from "crypto";
+import {
+  NewUserRole,
+  UserRoleResource,
+  userRole
+} from "@/db/schema/userRole";
 import { eq } from "drizzle-orm";
 
-export async function findAllUserRoles(userId: UUID): Promise<UserRole[]> {
-  return await database.query.userRole.findMany({
+export async function findUserRole(
+  userId: string
+): Promise<UserRoleResource | undefined> {
+  return await database.query.userRole.findFirst({
     where: eq(userRole.userId, userId),
+    with: {
+      roleResource: true,
+    },
   });
 }
 
-export async function saveUserRole(
-  userId: UUID,
-  role: RoleEnum = RoleEnum.STUDENT
-): Promise<UserRole[]> {
-  return await database.insert(userRole).values({
-    userId: userId,
-    role: role,
-  });
+export async function saveUserRole(newUserRole: NewUserRole) {
+  return await database.insert(userRole).values(newUserRole);
 }
 
-export async function updateUserRole(
-  userId: UUID,
-  role: RoleEnum
-): Promise<UserRole[]> {
+export async function updateUserRole(newUserRole: NewUserRole) {
   return await database
     .update(userRole)
     .set({
-      role: role,
+      role: newUserRole.role,
     })
-    .where(eq(userRole.userId, userId));
+    .where(eq(userRole.userId, newUserRole.userId));
 }

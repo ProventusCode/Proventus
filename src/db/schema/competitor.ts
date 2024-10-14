@@ -1,11 +1,11 @@
-import { serial, varchar } from "drizzle-orm/pg-core";
+import { serial, text, varchar } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
 import { audit } from "./audit";
 
 export const competitor = schema.table("competitor", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 64 }).notNull().unique(),
-  universityName: varchar("university_name", { length: 128 }),
+  name: text("name").notNull().unique(),
+  universityName: text("university_name"),
   ...audit,
 });
 

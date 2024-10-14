@@ -1,14 +1,17 @@
 "use server";
 
+import { RoleEnum } from "@/enums/RoleEnum";
 import createSupabaseServerClient from "@/lib/supabase/server";
+import { saveUserInfo } from "@/services/actions/UserInfoActions";
 import { saveUserRole } from "@/services/actions/UserRoleActions";
+import { UserType } from "@/types/contest.types";
 import { UUID } from "crypto";
 import { redirect } from "next/navigation";
 
 interface Credentials {
   email: string;
   password: string;
-  username?: string;
+  username: string;
 }
 
 export async function signUpWithEmailAndPassword(credentials: Credentials) {
@@ -30,7 +33,12 @@ export async function signUpWithEmailAndPassword(credentials: Credentials) {
   }
 
   const userId = response.data?.user?.id as UUID;
-  await saveUserRole(userId);
+  await saveUserInfo({
+    userId,
+    email: credentials.email,
+    name: credentials.username,
+  });
+  await saveUserRole({ userId, role: RoleEnum.STUDENT });
 
   redirect("/core/");
 }

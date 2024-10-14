@@ -55,12 +55,12 @@ export default function LandingPage() {
         <div className="grid gap-12 lg:grid-cols-2 items-center">
           <div className="flex flex-col justify-center space-y-6">
             <h1 className="text-3xl md:text-5xl font-bold tracking-tighter text-green-900">
-              Análisis inteligente para programadores competitivos
+              Gestión y análisis de resultados para programación competitiva
             </h1>
             <p className="text-lg text-gray-700 max-w-[600px]">
               Automatiza la extracción de concursos, accede a estadísticas
-              descriptivas y recibe retroalimentación en tiempo real con IA.
-              Mejora tu rendimiento y lleva tu código al siguiente nivel.
+              descriptivas y recibe retroalimentación de tu código impulsada por{" "}
+              <span className="font-bold">IA</span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link

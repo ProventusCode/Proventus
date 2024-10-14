@@ -1,4 +1,14 @@
 import { ProblemStatistic } from "@/db/schema/contestStanding";
+import { RoleEnum } from "@/enums/RoleEnum";
+
+export type UserType = {
+  id: string;
+  name: string;
+  email: string;
+  university?: string | null;
+  role: RoleEnum;
+  password?: string;
+};
 
 export type ContestType = {
   contestId: string;

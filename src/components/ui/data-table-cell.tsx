@@ -11,6 +11,14 @@ import MultipleSelector, {
   stringToOptions,
 } from "./multiple-selector.ext";
 import { DateUtils } from "@/utils/DateUtils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
+import { PlatformEnum } from "@/enums/PlatformEnum";
 
 interface DataTableCellProps<TData> {
   defaultValue?: string | number;
@@ -36,7 +44,6 @@ export function DataTableCell<TData>({
   }, [initialValue]);
 
   const onBlur = () => {
-    console.log("onBlur", row.index, column.id, value);
     tableMeta?.updateData(row.index, column.id, value);
   };
 
@@ -57,6 +64,22 @@ export function DataTableCell<TData>({
       />
     );
   }
+  // if (columnMeta?.type === "select") {
+  //   return (
+  //     <Select required={true} onValueChange={setValue}>
+  //       <SelectTrigger>
+  //         <SelectValue id="platform" />
+  //       </SelectTrigger>
+  //       <SelectContent>
+  //         {Object.entries(PlatformEnum).map(([key, value]) => (
+  //           <SelectItem key={key} value={value}>
+  //             {value}
+  //           </SelectItem>
+  //         ))}
+  //       </SelectContent>
+  //     </Select>
+  //   );
+  // }
   if (columnMeta?.type === "multi-select") {
     return (
       <MultipleSelector

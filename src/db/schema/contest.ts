@@ -1,18 +1,18 @@
-import { integer, serial, timestamp, varchar } from "drizzle-orm/pg-core";
+import { integer, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
 import { audit } from "./audit";
 import { platformEnum } from "./enums";
 
 export const contest = schema.table("contest", {
   id: serial("id").primaryKey(),
-  contestId: varchar("contest_id", { length: 16 }).notNull().unique(),
-  name: varchar("name", { length: 128 }).notNull(),
+  contestId: text("contest_id").notNull().unique(),
+  name: text("name").notNull(),
   platform: platformEnum("platform").notNull(),
   startDate: timestamp("start_date").notNull(),
   endDate: timestamp("end_date").notNull(),
-  manager: varchar("manager", { length: 64 }),
+  manager: text("manager"),
   participants: integer("participants").notNull(),
-  source: varchar("source", { length: 256 }),
+  source: text("source"),
   ...audit,
 });
 

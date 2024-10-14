@@ -1,7 +1,7 @@
-import { integer, json, serial, varchar } from "drizzle-orm/pg-core";
+import { integer, jsonb, serial, text, varchar } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
-import { competitor } from "./competitor";
 import { audit } from "./audit";
+import { competitor } from "./competitor";
 import { contest } from "./contest";
 
 export interface ProblemStatistic {
@@ -13,17 +13,17 @@ export interface ProblemStatistic {
 
 export const contestStanding = schema.table("contest_standing", {
   id: serial("id").primaryKey(),
-  contestId: varchar("contest_id", { length: 16 })
+  contestId: text("contest_id")
     .notNull()
     .references(() => contest.contestId),
   rank: integer("rank").notNull(),
-  userName: varchar("user_name", { length: 128 })
+  userName: text("user_name")
     .notNull()
     .references(() => competitor.name),
-  universityName: varchar("university_name", { length: 128 }),
+  universityName: text("university_name"),
   problemsSolved: integer("problems_solved").notNull(),
   totalTime: integer("total_time").notNull(),
-  problemStatistics: json("problem_statistics").$type<ProblemStatistic[]>(),
+  problemStatistics: jsonb("problem_statistics").$type<ProblemStatistic[]>(),
   ...audit,
 });
 
