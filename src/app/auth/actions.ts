@@ -4,17 +4,21 @@ import { RoleEnum } from "@/enums/RoleEnum";
 import createSupabaseServerClient from "@/lib/supabase/server";
 import { saveUserInfo } from "@/services/actions/UserInfoActions";
 import { saveUserRole } from "@/services/actions/UserRoleActions";
-import { UserType } from "@/types/contest.types";
 import { UUID } from "crypto";
 import { redirect } from "next/navigation";
 
-interface Credentials {
+type Credentials = {
   email: string;
   password: string;
-  username: string;
-}
+};
 
-export async function signUpWithEmailAndPassword(credentials: Credentials) {
+type UserName = {
+  username: string;
+};
+
+export async function signUpWithEmailAndPassword(
+  credentials: Credentials & UserName
+) {
   const supabase = await createSupabaseServerClient();
 
   const response = await supabase.auth.signUp({

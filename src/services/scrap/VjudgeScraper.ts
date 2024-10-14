@@ -43,7 +43,7 @@ export class VjudgeScraper implements ScraperService {
     return {
       contestId: contestId,
       name: vjudgeContest?.title ?? rankJson?.title,
-      platform: PlatformEnum.VJUDDE,
+      platform: PlatformEnum.VJUDGE,
       startDate: DateUtils.toPostgresDate(vjudgeContest?.begin),
       endDate: DateUtils.toPostgresDate(vjudgeContest?.end),
       manager: vjudgeContest?.managerName,
