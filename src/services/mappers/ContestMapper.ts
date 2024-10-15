@@ -13,4 +13,11 @@ export class ContestMapper {
   static toContestTypeList(contests: Contest[]): ContestType[] {
     return contests.map(this.toContestType);
   }
+
+  static async toContestTypeAsync(
+    contest: Promise<Contest | undefined>
+  ): Promise<ContestType> {
+    const contestType = await contest;
+    return contestType ? this.toContestType(contestType) : ({} as ContestType);
+  }
 }

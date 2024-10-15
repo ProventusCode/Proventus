@@ -74,8 +74,8 @@ const standingsHeaders = [
 ];
 
 export function setProblemsStatsHeaders(problemStatistic: ProblemStatistic[]) {
-  if (standingsHeaders.length > 6) {
-    return;
+  if (standingsHeaders.length >= 6) {
+    standingsHeaders.splice(6);
   }
   problemStatistic.forEach((problem) => {
     const statsColumn = columnHelper.accessor(

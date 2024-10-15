@@ -19,6 +19,10 @@ export class DataUtils {
     return !value ? "" : value.split(" ")[0];
   }
 
+  static getProblemIndex(value: string): string {
+    return value.split("-")[1];
+  }
+
   static normalizeResult(result: string): JudgeResultEnum {
     result = result.toUpperCase();
     if (result in JudgeResultEnum) {

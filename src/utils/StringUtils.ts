@@ -7,6 +7,10 @@ export class StringUtils {
     return str?.split(this.COMMA).map((tag) => tag.trim());
   }
 
+  static listToStr(list: string[] | undefined | null): string | undefined {
+    return list?.join(this.COMMA);
+  }
+
   static intToUpperChar(asciiCode: number): string {
     return String.fromCharCode(asciiCode + 65);
   }

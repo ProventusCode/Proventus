@@ -13,7 +13,6 @@ import { ObjectUtils } from "@/utils/ObjectUtils";
 import { StringUtils } from "@/utils/StringUtils";
 import * as cheerio from "cheerio";
 import { ENDPOINTS } from "../endpoints";
-import { getBrowser } from "./BrowserFactory";
 import { ScraperService } from "./ScraperService";
 import {
   VjudgeContest,
@@ -102,7 +101,7 @@ export class VjudgeScraper implements ScraperService {
             language: submission.languageCanonical,
             memoryConsumed: submission.memory,
             problemId: `${contestId}-${submission.contestNum}`,
-            problemIndex: submission.contestNum,
+            index: submission.contestNum,
             result: DataUtils.normalizeResult(submission.status),
             submissionDateTime: DateUtils.toPostgresDate(
               new Date(submission.time)
@@ -127,6 +126,7 @@ export class VjudgeScraper implements ScraperService {
 
   async getContestStandings(contestId: string): Promise<ContestStandingType[]> {
     const url = `${ENDPOINTS.vjudge.contest}/${contestId}#rank`;
+    console.log("getContestStandings: ", url);
 
     const contestRankTable = "#contest-rank-table tbody tr";
     const result = await fetch(ENDPOINTS.proxy, {
@@ -139,7 +139,7 @@ export class VjudgeScraper implements ScraperService {
         method: "GET",
         url: url,
         jsrender: true,
-        waitfor: contestRankTable,
+        waitfor: contestRankTable.split(" ")[0],
       }),
     });
 
@@ -147,6 +147,8 @@ export class VjudgeScraper implements ScraperService {
     const $ = cheerio.load(response.content);
 
     const $table = $(contestRankTable);
+    console.log("getContestStandings.result: ", $table?.length);
+
     const standings: ContestStandingType[] = [];
     $table.each((_, row) => {
       const $row = $(row);

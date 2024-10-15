@@ -62,7 +62,7 @@ const userSchema = z.object({
 });
 
 interface UserFormProps {
-  user: UserType | null | undefined;
+  user: UserType;
   onSave: (user: UserType) => void;
 }
 
@@ -75,14 +75,7 @@ export default function UserForm({ user, onSave }: Readonly<UserFormProps>) {
 
   const userForm = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
-    defaultValues: user || {
-      id: "",
-      name: "",
-      email: "",
-      university: "",
-      password: "",
-      role: RoleEnum.STUDENT,
-    },
+    defaultValues: user,
   });
 
   const onSubmit = async (data: z.infer<typeof userSchema>) => {
@@ -95,9 +88,9 @@ export default function UserForm({ user, onSave }: Readonly<UserFormProps>) {
     <Form {...userForm}>
       <form onSubmit={userForm.handleSubmit(onSubmit)}>
         <SheetHeader>
-          <SheetTitle>{user ? "Editar Usuario" : "Agregar Usuario"}</SheetTitle>
+          <SheetTitle>Editar Usuario</SheetTitle>
           <SheetDescription>
-            Completa la información del usuario.
+            Modificar la información del usuario.
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
@@ -128,12 +121,7 @@ export default function UserForm({ user, onSave }: Readonly<UserFormProps>) {
               render={({ field }) => (
                 <FormItem className="col-span-3">
                   <FormControl>
-                    <Input
-                      id="email"
-                      type="email"
-                      {...field}
-                      disabled={isLoading || !!user}
-                    />
+                    <Input id="email" type="email" {...field} disabled={true} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -244,7 +232,7 @@ export default function UserForm({ user, onSave }: Readonly<UserFormProps>) {
         <SheetFooter>
           <SheetClose asChild>
             <Button type="submit" disabled={isLoading}>
-              {user ? "Guardar Cambios" : "Agregar Usuario"}
+              Guardar Cambios
               {isLoading && (
                 <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
               )}

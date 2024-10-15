@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PlatformEnum } from "@/enums/PlatformEnum";
-import { ScraperFactory } from "@/services/scrap/ScraperFactory";
+import { ScraperStrategy } from "@/services/scrap/ScraperFactory";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -53,7 +53,7 @@ interface FormValidation {
 }
 
 function isValidContest(platform: string, contestId: string): FormValidation {
-  const scraperService = ScraperFactory.getCreator(platform);
+  const scraperService = ScraperStrategy.getStrategy(platform);
   if (!scraperService) {
     return {
       field: "platform",

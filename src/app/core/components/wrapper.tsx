@@ -24,7 +24,7 @@ export default function Wrapper({
   const router = useRouter();
   const checkAuthorization = (resources: Resource[] | undefined) => {
     return (
-      !!resources?.find((resource) => resource.href === pathname) ||
+      !!resources?.find((resource) => pathname.includes(resource.href)) ||
       pathname === ROOT
     );
   };

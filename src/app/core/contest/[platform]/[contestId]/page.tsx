@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import SkeletonTable from "../../../../../components/ui/skeleton-table";
 import {
+  findContest,
   saveScrapedContest,
   scrapContest,
   setUniversityNames,
@@ -32,6 +33,10 @@ import {
   setProblemsStatsHeaders,
 } from "./components/table-headers/standings-headers";
 import { getSubmissionHeaders } from "./components/table-headers/submission-headers";
+import { existContestById } from "@/services/actions/ContestActions";
+import { findProblemsByContestId } from "@/services/actions/ProblemActions";
+import { findSubmissionsByContestId } from "@/services/actions/SubmissionActions";
+import { findStandingsByContestId } from "@/services/actions/StandingsActions";
 
 interface ContestRegisterPageProps extends Params {
   platform: string;
@@ -50,7 +55,7 @@ export default function ContestRegisterPage() {
 
   useEffect(() => {
     async function initialize() {
-      const { contest, problems, submissions, standings } = await scrapContest(
+      const { contest, problems, submissions, standings } = await findContest(
         platform,
         contestId
       );
@@ -63,11 +68,30 @@ export default function ContestRegisterPage() {
       standings.then((standings) => {
         setStandings(standings);
         setProblemsStatsHeaders(standings?.[0]?.problemStatistics);
-        setUniversityNames(platform, standings).then(setStandings);
+        processUniversityNames(platform, standings);
       });
     }
     initialize();
   }, [platform, contestId]);
+
+  const processUniversityNames = async (
+    platform: string,
+    standings: ContestStandingType[]
+  ) => {
+    if (standings[0]?.universityName) return;
+
+    const chunkSize = 15;
+    let updatedStandings = [...standings];
+
+    for (let i = 0; i < standings.length; i += chunkSize) {
+      const chunk = standings.slice(i, i + chunkSize);
+      const chunkWithNames = await setUniversityNames(platform, chunk);
+      for (let j = 0; j < chunk.length; j++) {
+        updatedStandings[i + j] = chunkWithNames[j];
+      }
+    }
+    setStandings(updatedStandings);
+  };
 
   const onSubmitCallback = async (
     contestMetadata: z.infer<typeof contestFormSchema>
@@ -149,7 +173,7 @@ export default function ContestRegisterPage() {
             className="flex flex-col items-center justify-center gap-4"
           >
             {standings ? (
-              <div className="rounded-xl border shadow-lg">
+              <div className="rounded-xl border shadow-lg max-w-screen-2xl">
                 <DataTable
                   key={standings[0]?.universityName}
                   data={standings}

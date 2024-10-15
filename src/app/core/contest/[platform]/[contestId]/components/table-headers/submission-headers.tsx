@@ -13,6 +13,8 @@ import {
   FileText,
 } from "lucide-react";
 import Image from "next/image";
+import { Dispatch, SetStateAction } from "react";
+import CodeUploader from "../code-uploader";
 import { EditCell } from "./edit-cell";
 
 const columnHelper = createColumnHelper<SubmissionType>();
@@ -39,7 +41,7 @@ const submissionHeaders = [
       },
     },
   }),
-  columnHelper.accessor("problemIndex", {
+  columnHelper.accessor("index", {
     header: "Problema",
     cell: DataTableCell,
     meta: {
@@ -144,6 +146,26 @@ const submissionHeaders = [
     cell: DataTableCell,
     meta: {
       type: "datetime-local",
+    },
+  }),
+  columnHelper.accessor("sourceCode", {
+    header: "</>",
+    cell: DataTableCell,
+    meta: {
+      type: "dialog",
+      customComponent: (
+        data: SubmissionType,
+        value: string,
+        setValue: Dispatch<SetStateAction<string>>,
+        onBlur: () => void
+      ) => (
+        <CodeUploader
+          data={data}
+          value={value}
+          setValue={setValue}
+          onBlur={onBlur}
+        />
+      ),
     },
   }),
   columnHelper.display({

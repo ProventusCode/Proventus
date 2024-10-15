@@ -4,12 +4,12 @@ import { competitor } from "./schema/competitor";
 import { contest } from "./schema/contest";
 import { contestStanding } from "./schema/contestStanding";
 import { city, country, university } from "./schema/location";
-import { problem } from "./schema/problem";
-import { problemSet } from "./schema/problemSet";
-import { submission } from "./schema/submission";
-import { userRole, userRoleRelations } from "./schema/userRole";
+import { problem, problemRelations } from "./schema/problem";
+import { problemSet, problemSetRelations } from "./schema/problemSet";
 import { roleResource, roleResourceRelations } from "./schema/roleResource";
+import { submission } from "./schema/submission";
 import { userInfo, userInfoRelations } from "./schema/user";
+import { userRole, userRoleRelations } from "./schema/userRole";
 
 const connectionString = process.env.POSTGRES_DRIZZLE_URL!;
 
@@ -30,8 +30,10 @@ export const databaseSchema = {
 
 export const relations = {
   userRoleRelations,
-  roleResourceRelations,
   userInfoRelations,
+  roleResourceRelations,
+  problemRelations,
+  problemSetRelations,
 };
 
 export const client = postgres(connectionString);

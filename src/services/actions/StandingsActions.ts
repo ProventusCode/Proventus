@@ -7,9 +7,14 @@ import {
   NewContestStanding,
 } from "@/db/schema/contestStanding";
 import { DatabaseUtils } from "@/utils/DatabaseUtils";
+import { eq } from "drizzle-orm";
 
-export async function findAllSubmission(): Promise<ContestStanding[]> {
-  return await database.query.contestStanding.findMany();
+export async function findStandingsByContestId(
+  contestId: string
+): Promise<ContestStanding[]> {
+  return await database.query.contestStanding.findMany({
+    where: eq(contestStanding.contestId, contestId),
+  });
 }
 
 export async function saveAllStandings(entities: NewContestStanding[]) {
@@ -20,7 +25,7 @@ export async function saveAllStandings(entities: NewContestStanding[]) {
       target: contestStanding.id,
       set: DatabaseUtils.conflictUpdateAllExcept(
         contestStanding,
-        DatabaseUtils.TIME_COLUMNS
+        DatabaseUtils.DEFAULT_IGNORED_COLUMNS
       ),
     });
 }

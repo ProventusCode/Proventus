@@ -1,10 +1,10 @@
+import { Badge } from "@/components/ui/badge";
 import { DataTableCell } from "@/components/ui/data-table-cell";
 import { ProblemType } from "@/types/contest.types";
 import { createColumnHelper } from "@tanstack/react-table";
+import { Star } from "lucide-react";
 import { getTags } from "../../actions";
 import { EditCell } from "./edit-cell";
-import { Badge } from "@/components/ui/badge";
-import { Star } from "lucide-react";
 
 const columnHelper = createColumnHelper<ProblemType>();
 
@@ -94,6 +94,7 @@ const problemHeaders = [
 
 export async function setProblemTags() {
   const tags = await getTags();
+
   const tagsColumn = problemHeaders.find((header) => header.header === "Tags");
   const columnMeta: any = tagsColumn?.meta;
   if (columnMeta) {

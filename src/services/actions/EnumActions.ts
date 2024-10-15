@@ -8,7 +8,7 @@ export async function selectAllEnumValues(
   enumName: string
 ): Promise<RowList<Record<string, string>[]>> {
   const statement = sql.raw(
-    `SELECT unnest(enum_range(NULL::${enumName})) AS label`
+    `SELECT unnest(enum_range(NULL::analytics.${enumName})) AS label`
   );
   return await database.execute(statement);
 }

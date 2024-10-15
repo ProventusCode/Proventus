@@ -7,10 +7,10 @@ export type UserType = {
   email: string;
   university?: string | null;
   role: RoleEnum;
-  password?: string;
 };
 
 export type ContestType = {
+  id?: number;
   contestId: string;
   name: string;
   platform: string;
@@ -22,11 +22,12 @@ export type ContestType = {
 };
 
 export type SubmissionType = {
+  id?: number;
   submissionId: number;
   contestId: string;
   userName: string;
   problemId: string;
-  problemIndex?: string | null;
+  index?: string | null;
   codeLength?: number | null;
   memoryConsumed?: number | null;
   timeConsumed?: number | null;
@@ -37,7 +38,9 @@ export type SubmissionType = {
 };
 
 export type ProblemType = {
+  id?: number;
   problemId: string;
+  problemSetId?: number;
   index: string;
   name: string;
   rating?: number | null;
@@ -49,6 +52,7 @@ export type ProblemType = {
 };
 
 export type ContestStandingType = {
+  id?: number;
   contestId: string;
   userName: string;
   universityName?: string | null;

@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Column, Row, Table } from "@tanstack/react-table";
 
+import { DateUtils } from "@/utils/DateUtils";
 import { es } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import { DateTimePicker } from "./date-time-picker.ext";
@@ -10,15 +11,7 @@ import MultipleSelector, {
   optionsToString,
   stringToOptions,
 } from "./multiple-selector.ext";
-import { DateUtils } from "@/utils/DateUtils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./select";
-import { PlatformEnum } from "@/enums/PlatformEnum";
+import { StringUtils } from "@/utils/StringUtils";
 
 interface DataTableCellProps<TData> {
   defaultValue?: string | number;
@@ -46,6 +39,15 @@ export function DataTableCell<TData>({
   const onBlur = () => {
     tableMeta?.updateData(row.index, column.id, value);
   };
+
+  if (columnMeta?.customComponent || columnMeta?.type === "dialog") {
+    return columnMeta.customComponent(
+      row.original,
+      value,
+      setValue,
+      onBlur
+    );
+  }
 
   if (!tableMeta?.editedRows[row.id]) {
     return columnMeta?.customStyle ? columnMeta.customStyle(value) : value;
