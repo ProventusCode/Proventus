@@ -1,0 +1,1 @@
+ALTER TABLE "analytics"."role_resource" ADD CONSTRAINT "role_resource_role_unique" UNIQUE("role");

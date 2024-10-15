@@ -1,0 +1,1 @@
+ALTER TABLE "analytics"."problem" ALTER COLUMN "problem_set_id" SET NOT NULL;

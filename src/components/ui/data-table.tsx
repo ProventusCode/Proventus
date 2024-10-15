@@ -1,11 +1,3 @@
-import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -25,8 +17,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Dispatch, SetStateAction, useState } from "react";
-import { Button } from "./button";
-import { createClient } from "@supabase/supabase-js";
+import TablePagination from "./data-table-pagination";
 
 type Row = Record<string | number | symbol, boolean>;
 
@@ -41,11 +32,15 @@ declare module "@tanstack/react-table" {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  paginationSize?: number;
+  handleOriginalDataUpdate?: Dispatch<SetStateAction<TData[] | undefined>>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  paginationSize,
+  handleOriginalDataUpdate,
 }: Readonly<DataTableProps<TData, TValue>>) {
   const [editableData, setEditableData] = useState<TData[]>([...data]);
   const [editedRows, setEditedRows] = useState<Row>({});
@@ -56,12 +51,17 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: paginationSize ?? 5,
+      },
+    },
     meta: {
       editedRows,
       setEditedRows,
-      updateData: (rowIndex: number, columnId: string, value: string) => {
-        setEditableData((old: TData[]) =>
-          old.map((row, index) => {
+      updateData: function (rowIndex: number, columnId: string, value: string) {
+        const newData = (old: TData[] | undefined) =>
+          old?.map((row, index) => {
             if (index === rowIndex) {
               return {
                 ...old[rowIndex],
@@ -69,19 +69,20 @@ export function DataTable<TData, TValue>({
               };
             }
             return row;
-          })
-        );
+          }) ?? [];
+        setEditableData(newData);
+        handleOriginalDataUpdate?.(newData);
       },
     },
   });
 
   return (
-    <Table className="table-auto">
-      <TableHeader className="bg-gray-200">
+    <Table className="rounded-xl table-auto">
+      <TableHeader className="bg-gray-50">
         <TableRow>
           {table.getHeaderGroups().map((headerGroup) =>
             headerGroup.headers.map((header) => (
-              <TableHead key={header.id} className="text-center">
+              <TableHead key={header.id} className="text-center font-bold">
                 {header.isPlaceholder
                   ? null
                   : flexRender(
@@ -94,76 +95,30 @@ export function DataTable<TData, TValue>({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {table.getRowModel().rows.map((row) => (
-          <TableRow key={row.id} className="text-center">
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
+        {table.getRowModel().rows?.length > 0 ? (
+          table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id} className="text-center">
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell
+              colSpan={columns.length}
+              className="text-center py-4 w-full"
+            >
+              No se encontró información
+            </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
       {table.getPageCount() > table.getState().pagination.pageSize && (
         <TableFooter>
-          <TableRow>
-            <TableCell colSpan={table.getAllColumns().length}>
-              <Pagination>
-                <PaginationContent>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                  >
-                    Previous
-                  </Button>
-                  <PaginationItem>
-                    <PaginationLink isActive>
-                      {table.getState().pagination.pageIndex + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-
-                  <PaginationItem>
-                    <PaginationLink>{table.getPageCount()}</PaginationLink>
-                  </PaginationItem>
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                  >
-                    Next
-                  </Button>
-
-                  <div className="flex items-center gap-1">
-                    | Ir a página:
-                    <Input
-                      className="border p-1 rounded w-10"
-                      type="number"
-                      min={1}
-                      max={table.getPageCount()}
-                      defaultValue={table.getState().pagination.pageIndex + 1}
-                      onChange={(e) => {
-                        const page = Number(e.target.value);
-                        const value = Math.max(
-                          0,
-                          Math.min(page, table.getPageCount())
-                        );
-                        table.setPageIndex(value - 1);
-                        e.currentTarget.value = value.toString();
-                      }}
-                    />
-                  </div>
-                </PaginationContent>
-              </Pagination>
-            </TableCell>
-          </TableRow>
+          <TablePagination table={table} />
         </TableFooter>
       )}
     </Table>

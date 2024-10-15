@@ -1,43 +1,49 @@
 "use client";
 
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { readUser } from "@/lib/supabase/actions";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Package2Icon, User } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Header() {
+  const router = useRouter();
+  const supabase = createSupabaseBrowserClient();
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      const { data } = await readUser();
+      setName(
+        data?.user?.user_metadata?.display_name ??
+          data?.user?.user_metadata?.user_name
+      );
+    };
+    fetchUsername();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+  };
+
   return (
-    <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
+    <header className="flex h-14 lg:h-[60px] items-center justify-end gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
       <Link className="lg:hidden" href="#">
         <Package2Icon className="h-6 w-6" />
         <span className="sr-only">Home</span>
       </Link>
-      <div className="w-full flex-1">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+      <span>{name}</span>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -46,16 +52,16 @@ export default function Header() {
             variant="ghost"
           >
             <User height={32} className="rounded-full" />
-            <span className="sr-only">Toggle user menu</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
+          <DropdownMenuItem>Configuraciones</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
+          <DropdownMenuItem className="text-red-600" onClick={handleSignOut}>
+            Cerrar sesión
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

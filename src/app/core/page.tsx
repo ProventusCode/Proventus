@@ -1,3 +1,5 @@
-export default function Page() {
-  return <h1> Page</h1>;
+import { redirect } from "next/navigation";
+
+export default function HomePage() {
+  return redirect("/core/dashboard");
 }

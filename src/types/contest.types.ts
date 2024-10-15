@@ -1,47 +1,63 @@
-import { Platform } from "@/enums/platform";
+import { ProblemStatistic } from "@/db/schema/contestStanding";
+import { RoleEnum } from "@/enums/RoleEnum";
 
-export type Submission = {
-  code_length: number;
-  contest_id: string;
+export type UserType = {
   id: string;
-  language: string;
-  memory_consumed: number | undefined;
-  problem_name: string;
+  name: string;
+  email: string;
+  university?: string | null;
+  role: RoleEnum;
+};
+
+export type ContestType = {
+  id?: number;
+  contestId: string;
+  name: string;
+  platform: string;
+  startDate?: string;
+  endDate?: string;
+  manager?: string | null;
+  participants?: number | null;
+  source?: string | null;
+};
+
+export type SubmissionType = {
+  id?: number;
+  submissionId: number;
+  contestId: string;
+  userName: string;
+  problemId: string;
+  index?: string | null;
+  codeLength?: number | null;
+  memoryConsumed?: number | null;
+  timeConsumed?: number | null;
   result: string;
-  submission_date: string;
-  time_consumed: number | undefined;
-  user_name: string;
+  language: string;
+  sourceCode?: string | null;
+  submissionDateTime?: string;
 };
 
-export type Problem = {
-  indicative: string;
-  id: string;
-  problem_name: string;
-  origin: string;
-  time_limit: number;
-  memory_limit: number;
+export type ProblemType = {
+  id?: number;
+  problemId: string;
+  problemSetId?: number;
+  index: string;
+  name: string;
+  rating?: number | null;
+  tags?: string | null;
+  author?: string | null;
+  origin?: string | null;
+  timeLimit?: number | null;
+  memoryLimit?: number | null;
 };
 
-export type Contest = {
-  id: string;
-  contest_name: string;
-  platform: Platform;
-  start_date: string;
-  duration: number;
-  end_date: string;
-  manager: string;
-  registered_participants: number | undefined;
-  source: string;
-  extracted_at: string;
-};
-
-export type ContestStanding = {
-  id: string;
-  contest_id: string;
+export type ContestStandingType = {
+  id?: number;
+  contestId: string;
+  userName: string;
+  universityName?: string | null;
   rank: number;
-  university: string;
-  team: string;
-  problems_solved: number;
-  total_time: number;
-  problems_stats: Record<string, number>;
+  problemsSolved: number;
+  totalTime: number;
+  problemStatistics: ProblemStatistic[];
 };

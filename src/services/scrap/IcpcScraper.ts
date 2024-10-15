@@ -1,4 +1,4 @@
-import { Contest, Problem, Submission } from "@/types/contest.types";
+import { ContestType, ProblemType, SubmissionType } from "@/types/contest.types";
 import { ScraperService } from "./ScraperService";
 
 export class IcpcScraper implements ScraperService {
@@ -6,17 +6,17 @@ export class IcpcScraper implements ScraperService {
     throw new Error("Method not implemented.");
   }
 
-  async getContestMetadata(contestId: string): Promise<Contest> {
+  async getContestMetadata(contestId: string): Promise<ContestType> {
     const ENV_URL =
       "https://icpc.global/regionals/finder/ColombiaMaratonNalACISREDIS-2024";
     return await fetch(ENV_URL).then((res) => res.json());
   }
 
-  async getProblems(contestId: string): Promise<Problem[]> {
+  async getProblems(contestId: string): Promise<ProblemType[]> {
     throw new Error("Method not implemented.");
   }
 
-  async getSubmissions(contestId: string): Promise<Submission[]> {
+  async getSubmissions(contestId: string): Promise<SubmissionType[]> {
     throw new Error("Method not implemented.");
   }
 

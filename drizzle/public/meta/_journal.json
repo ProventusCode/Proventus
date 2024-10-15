@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1728771833134,
+      "tag": "20241012222353_spotty_gateway",
+      "breakpoints": true
+    }
+  ]
+}
