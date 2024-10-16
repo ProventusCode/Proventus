@@ -27,7 +27,6 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { signUpWithEmailAndPassword } from "../actions";
 import OAuthForm from "./oauth-form";
-import router, { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({

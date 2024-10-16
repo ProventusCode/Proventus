@@ -49,9 +49,9 @@ export async function signUpWithEmailAndPassword(
 
 export async function signInWithEmailAndPassword(credentials: Credentials) {
   const supabase = await createSupabaseServerClient();
-
-  return await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email: credentials.email,
     password: credentials.password,
   });
+  return error?.message;
 }

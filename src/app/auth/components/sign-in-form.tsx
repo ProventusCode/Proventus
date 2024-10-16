@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,12 +21,12 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { signInWithEmailAndPassword } from "../actions";
 import OAuthForm from "./oauth-form";
-import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Correo electrónico inválido" }),
@@ -47,12 +49,13 @@ export default function SignInForm() {
   const onSubmit = async (credentials: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     const response = await signInWithEmailAndPassword(credentials);
-    if (response.error) {
+    if (response) {
       toast({
         variant: "destructive",
         title: "Error al iniciar sesión",
         description: "Correo electrónico o contraseña incorrectos",
       });
+      setIsLoading(false);
       return;
     }
     setIsLoading(false);

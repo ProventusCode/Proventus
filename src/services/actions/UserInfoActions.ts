@@ -11,6 +11,10 @@ export async function findAllUser(): Promise<UserInfoDTO[]> {
   });
 }
 
+export async function exitsUserById(userId: string): Promise<boolean> {
+  return (await database.$count(userInfo, eq(userInfo.userId, userId))) > 0;
+}
+
 export async function saveUserInfo(newUserInfo: NewUserInfo) {
   return await database.insert(userInfo).values(newUserInfo);
 }
