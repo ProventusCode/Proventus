@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import React from "react";
 
 export default function OAuthForm() {
   const supabase = createSupabaseBrowserClient();
