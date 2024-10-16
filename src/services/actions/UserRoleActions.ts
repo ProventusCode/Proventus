@@ -1,11 +1,7 @@
 "use server";
 
 import { database } from "@/db/drizzle";
-import {
-  NewUserRole,
-  UserRoleResource,
-  userRole
-} from "@/db/schema/userRole";
+import { NewUserRole, UserRoleResource, userRole } from "@/db/schema/userRole";
 import { eq } from "drizzle-orm";
 
 export async function findUserRole(

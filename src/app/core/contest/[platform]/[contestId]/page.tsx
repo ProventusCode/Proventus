@@ -15,11 +15,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import SkeletonTable from "../../../../../components/ui/skeleton-table";
-import {
-  findContest,
-  saveScrapedContest,
-  setUniversityNames
-} from "./actions";
+import { findContest, saveScrapedContest, setUniversityNames } from "./actions";
 import ContestMetadataForm, {
   contestFormSchema,
 } from "./components/contest-metadata-form";

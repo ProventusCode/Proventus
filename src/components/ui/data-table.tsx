@@ -26,10 +26,7 @@ import {
 import { FilterCell } from "app/core/contest/[platform]/[contestId]/components/table-headers/filter-cell";
 import { ArrowDownAZ, ArrowDownZA } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
-import { ExportAsExcel } from "react-export-table";
 import TablePagination from "./data-table-pagination";
-import { Button } from "./button";
-import { Icons } from "./icons";
 
 type Row = Record<string | number | symbol, boolean>;
 
@@ -46,7 +43,6 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   paginationSize?: number;
   filterable?: boolean;
-  exportable?: boolean;
   handleOriginalDataUpdate?: Dispatch<SetStateAction<TData[] | undefined>>;
 }
 
@@ -55,7 +51,6 @@ export function DataTable<TData, TValue>({
   data,
   paginationSize,
   filterable,
-  exportable,
   handleOriginalDataUpdate,
 }: Readonly<DataTableProps<TData, TValue>>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -104,7 +99,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <Table className="rounded-xl table-auto">
+    <Table className="rounded-xl">
       <TableHeader className="bg-gray-50">
         <TableRow>
           {table.getHeaderGroups().map((headerGroup) =>

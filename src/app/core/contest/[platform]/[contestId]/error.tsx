@@ -16,9 +16,14 @@ export default function ErrorBoundary({
     console.error(error);
   }, [error]);
 
+  const message = `Intenta recargar la página para solucionar el problema. 
+    Si el error persiste, contacta con el administrador.
+  `;
+
   toast({
-    title: "Ha ocurrido un error inesperado",
-    description: error.message,
+    title: "Ups! Parece que algo salió mal",
+    description: message,
+    variant: "destructive",
     action: (
       <ToastAction altText="Reload" onClick={reset}>
         Recargar

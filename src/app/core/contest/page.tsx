@@ -27,6 +27,7 @@ export default function ContestsListPage() {
           <ContestForm />
         </div>
       </div>
+      
       <div className="flex flex-items-center justify-center gap-4">
         {contests ? (
           <div className="rounded-xl border shadow-lg">

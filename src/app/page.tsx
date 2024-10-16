@@ -1,32 +1,31 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+
+const platforms = [
+  {
+    src: "/platforms/codeforces.svg",
+    href: "https://codeforces.com/",
+    alt: "Codeforces",
+    width: 300,
+    height: 100,
+  },
+  {
+    src: "/platforms/vjudge.png",
+    href: "https://vjudge.net/",
+    alt: "Vjudge",
+    width: 150,
+    height: 100,
+  },
+  {
+    src: "/platforms/icpc.svg",
+    href: "https://icpc.global/regionals/upcoming",
+    alt: "ICPC",
+    width: 250,
+    height: 100,
+  },
+];
 
 export default function LandingPage() {
-  const platforms = [
-    {
-      src: "/platforms/codeforces.svg",
-      href: "https://codeforces.com/",
-      alt: "Codeforces",
-      width: 300,
-      height: 100,
-    },
-    {
-      src: "/platforms/vjudge.png",
-      href: "https://vjudge.net/",
-      alt: "Vjudge",
-      width: 150,
-      height: 100,
-    },
-    {
-      src: "/platforms/icpc.svg",
-      href: "https://icpc.global/regionals/upcoming",
-      alt: "ICPC",
-      width: 250,
-      height: 100,
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-green-100">
       <nav className="flex justify-between items-center py-4 px-6 md:px-12 bg-white shadow-sm">
