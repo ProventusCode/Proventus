@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Table,
   TableBody,
@@ -9,13 +11,20 @@ import {
 } from "@/components/ui/table";
 import {
   ColumnDef,
+  ColumnFiltersState,
   RowData,
   flexRender,
   getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { FilterCell } from "app/core/contest/[platform]/[contestId]/components/table-headers/filter-cell";
+import { ArrowDownAZ, ArrowDownZA } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import TablePagination from "./data-table-pagination";
 
@@ -33,6 +42,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   paginationSize?: number;
+  filterable?: boolean;
   handleOriginalDataUpdate?: Dispatch<SetStateAction<TData[] | undefined>>;
 }
 
@@ -40,8 +50,10 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   paginationSize,
+  filterable,
   handleOriginalDataUpdate,
 }: Readonly<DataTableProps<TData, TValue>>) {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [editableData, setEditableData] = useState<TData[]>([...data]);
   const [editedRows, setEditedRows] = useState<Row>({});
 
@@ -49,8 +61,18 @@ export function DataTable<TData, TValue>({
     data: editableData,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+
+    getFilteredRowModel: getFilteredRowModel(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+
+    state: {
+      columnFilters,
+    },
+    onColumnFiltersChange: setColumnFilters,
     initialState: {
       pagination: {
         pageSize: paginationSize ?? 5,
@@ -77,18 +99,40 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <Table className="rounded-xl table-auto">
+    <Table className="rounded-xl">
       <TableHeader className="bg-gray-50">
         <TableRow>
           {table.getHeaderGroups().map((headerGroup) =>
             headerGroup.headers.map((header) => (
               <TableHead key={header.id} className="text-center font-bold">
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                {header.isPlaceholder ? null : (
+                  <>
+                    <div
+                      {...{
+                        className: header.column.getCanSort()
+                          ? "cursor-pointer select-none hover:text-secondary-foreground"
+                          : "",
+                        onClick: header.column.getToggleSortingHandler(),
+                      }}
+                    >
+                      <div className="flex items-center justify-center">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: <ArrowDownAZ className="w-4 h-4 ml-1" />,
+                          desc: <ArrowDownZA className="w-4 h-4 ml-1" />,
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    </div>
+                    {filterable && header.column.getCanFilter() ? (
+                      <div>
+                        <FilterCell column={header.column} />
+                      </div>
+                    ) : null}
+                  </>
+                )}
               </TableHead>
             ))
           )}

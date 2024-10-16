@@ -13,6 +13,7 @@ export class UserMapper {
       role: userInfo.userRole.role as RoleEnum,
     };
   }
+
   static toNewUserInfo(user: UserType): NewUserInfo {
     return {
       userId: user.id ?? "",

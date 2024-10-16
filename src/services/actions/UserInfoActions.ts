@@ -2,12 +2,12 @@
 
 import { database } from "@/db/drizzle";
 import { NewUserInfo, UserInfoDTO, userInfo } from "@/db/schema/user";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export async function findAllUser(): Promise<UserInfoDTO[]> {
   return await database.query.userInfo.findMany({
     with: { userRole: true, university: true },
-    limit: 10,
+    orderBy: [desc(userInfo.createdAt)],
   });
 }
 

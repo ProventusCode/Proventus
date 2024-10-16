@@ -3,6 +3,7 @@ import { ContestType } from "@/types/contest.types";
 import { createColumnHelper } from "@tanstack/react-table";
 import { SquareArrowOutUpRight, Users2 } from "lucide-react";
 import Link from "next/link";
+import ExportButton from "../[platform]/[contestId]/components/table-headers/export-button";
 
 const columnHelper = createColumnHelper<ContestType>();
 
@@ -57,12 +58,14 @@ const contestHeaders = [
     },
   }),
   columnHelper.display({
-    id: "view",
+    id: "edit",
+    header: ExportButton,
+    enableSorting: false,
     cell: (props) => {
       const data = props.row.original;
       return (
-        <Link href={`/core/contest/${data.platform}/${data.contestId}`}>
-          <SquareArrowOutUpRight />
+        <Link className="justify-items-center" href={`/core/contest/${data.platform}/${data.contestId}`}>
+          <SquareArrowOutUpRight className="hover:bg-muted hover:text-destructive" />
         </Link>
       );
     },

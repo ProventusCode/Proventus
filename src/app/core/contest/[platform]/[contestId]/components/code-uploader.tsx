@@ -43,7 +43,7 @@ export default function CodeUploader({
             e.stopPropagation();
           }}
         >
-          <Code2 className="h-4 w-4" />
+          <Code2 className="h-5 w-5" />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-screen-md">

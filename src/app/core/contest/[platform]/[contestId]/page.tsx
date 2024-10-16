@@ -15,12 +15,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import SkeletonTable from "../../../../../components/ui/skeleton-table";
-import {
-  findContest,
-  saveScrapedContest,
-  scrapContest,
-  setUniversityNames,
-} from "./actions";
+import { findContest, saveScrapedContest, setUniversityNames } from "./actions";
 import ContestMetadataForm, {
   contestFormSchema,
 } from "./components/contest-metadata-form";
@@ -33,10 +28,6 @@ import {
   setProblemsStatsHeaders,
 } from "./components/table-headers/standings-headers";
 import { getSubmissionHeaders } from "./components/table-headers/submission-headers";
-import { existContestById } from "@/services/actions/ContestActions";
-import { findProblemsByContestId } from "@/services/actions/ProblemActions";
-import { findSubmissionsByContestId } from "@/services/actions/SubmissionActions";
-import { findStandingsByContestId } from "@/services/actions/StandingsActions";
 
 interface ContestRegisterPageProps extends Params {
   platform: string;
@@ -160,6 +151,7 @@ export default function ContestRegisterPage() {
                     data={submissions}
                     columns={getSubmissionHeaders()}
                     paginationSize={5}
+                    filterable={true}
                     handleOriginalDataUpdate={setSubmissions}
                   />
                 </div>
@@ -179,6 +171,7 @@ export default function ContestRegisterPage() {
                   data={standings}
                   columns={getStandingsHeaders()}
                   paginationSize={5}
+                  filterable={true}
                   handleOriginalDataUpdate={setStandings}
                 />
               </div>

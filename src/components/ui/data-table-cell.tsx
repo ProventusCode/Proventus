@@ -1,3 +1,5 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import { Column, Row, Table } from "@tanstack/react-table";
 
@@ -11,7 +13,6 @@ import MultipleSelector, {
   optionsToString,
   stringToOptions,
 } from "./multiple-selector.ext";
-import { StringUtils } from "@/utils/StringUtils";
 
 interface DataTableCellProps<TData> {
   defaultValue?: string | number;
@@ -41,12 +42,7 @@ export function DataTableCell<TData>({
   };
 
   if (columnMeta?.customComponent || columnMeta?.type === "dialog") {
-    return columnMeta.customComponent(
-      row.original,
-      value,
-      setValue,
-      onBlur
-    );
+    return columnMeta.customComponent(row.original, value, setValue, onBlur);
   }
 
   if (!tableMeta?.editedRows[row.id]) {
@@ -114,7 +110,7 @@ export function DataTableCell<TData>({
           }}
           onBlur={onBlur}
           type="number"
-          label="Tiempo (min)"
+          label="Minutos"
         />
       </>
     );

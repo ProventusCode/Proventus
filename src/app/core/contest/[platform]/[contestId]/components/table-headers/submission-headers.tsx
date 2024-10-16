@@ -10,12 +10,17 @@ import {
   CheckCircle,
   Clock,
   Code,
+  Code2,
+  CodeSquare,
   FileText,
+  SquareTerminal,
+  Text,
 } from "lucide-react";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 import CodeUploader from "../code-uploader";
 import { EditCell } from "./edit-cell";
+import ExportButton from "./export-button";
 
 const columnHelper = createColumnHelper<SubmissionType>();
 
@@ -96,6 +101,7 @@ const submissionHeaders = [
   }),
   columnHelper.accessor("timeConsumed", {
     header: "Tiempo (ms)",
+    enableColumnFilter: false,
     cell: DataTableCell,
     meta: {
       type: "number",
@@ -103,6 +109,7 @@ const submissionHeaders = [
   }),
   columnHelper.accessor("memoryConsumed", {
     header: "Memoria (kb)",
+    enableColumnFilter: false,
     cell: DataTableCell,
     meta: {
       type: "number",
@@ -110,6 +117,7 @@ const submissionHeaders = [
   }),
   columnHelper.accessor("codeLength", {
     header: "Longitud",
+    enableColumnFilter: false,
     cell: DataTableCell,
     meta: {
       type: "number",
@@ -144,13 +152,16 @@ const submissionHeaders = [
   columnHelper.accessor("submissionDateTime", {
     header: "Fecha",
     cell: DataTableCell,
+    enableColumnFilter: false,
     meta: {
       type: "datetime-local",
     },
   }),
   columnHelper.accessor("sourceCode", {
-    header: "</>",
+    header: "",
     cell: DataTableCell,
+    enableColumnFilter: false,
+    enableSorting: false,
     meta: {
       type: "dialog",
       customComponent: (
@@ -170,6 +181,8 @@ const submissionHeaders = [
   }),
   columnHelper.display({
     id: "edit",
+    header: ExportButton,
+    enableSorting: false,
     cell: EditCell,
   }),
 ];
