@@ -8,6 +8,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { StringUtils } from "@/utils/StringUtils";
 import { Icons } from "@/components/ui/icons";
+import ExportButton from "./export-button";
 
 const columnHelper = createColumnHelper<ContestStandingType>();
 
@@ -15,6 +16,7 @@ const standingsHeaders = [
   columnHelper.accessor("rank", {
     header: "Rank",
     cell: DataTableCell,
+    enableColumnFilter: false,
     meta: {
       type: "number",
     },
@@ -68,6 +70,8 @@ const standingsHeaders = [
     },
   }),
   columnHelper.display({
+    header: ExportButton,
+    enableSorting: false,
     id: "edit",
     cell: EditCell,
   }),
@@ -88,6 +92,7 @@ export function setProblemsStatsHeaders(problemStatistic: ProblemStatistic[]) {
       {
         header: problem.index,
         cell: DataTableCell,
+        enableColumnFilter: false,
         meta: {
           type: "double-input",
           customStyle: (value: string) => {
@@ -99,7 +104,13 @@ export function setProblemsStatsHeaders(problemStatistic: ProblemStatistic[]) {
                   <span>{attempts}</span>
                 </div>
                 <div className="flex gap-2 items-center justify-items-center">
-                  <Clock className="text-gray-500" />
+                  <Clock
+                    className={`${
+                      Number(submitTime) > 0
+                        ? "text-green-500"
+                        : "text-gray-500"
+                    }`}
+                  />
                   <span>{submitTime}</span>
                 </div>
               </div>
