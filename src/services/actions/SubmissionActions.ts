@@ -2,16 +2,32 @@
 
 import { database } from "@/db/drizzle";
 import { problem } from "@/db/schema/problem";
-import { NewSubmission, submission, Submission } from "@/db/schema/submission";
+import {
+  NewSubmission,
+  submission,
+  Submission,
+  SubmissionWithProblem,
+} from "@/db/schema/submission";
 import { DatabaseUtils } from "@/utils/DatabaseUtils";
-import { eq, ilike, or } from "drizzle-orm";
+import { and, eq, ilike, isNotNull, or } from "drizzle-orm";
 
-export async function findSubmissionByFilter(keyword: string) {
+export async function findSubmissionByFilter(
+  keyword: string
+): Promise<SubmissionWithProblem[]> {
   return await database
-    .select({})
+    .select()
     .from(submission)
-    .where(or(ilike(submission.userName, `%${keyword}%`)))
-    .innerJoin(problem, eq(submission.problemId, problem.problemId));
+    .leftJoin(problem, eq(submission.problemId, problem.problemId))
+    .where(
+      and(
+        isNotNull(submission.sourceCode),
+        or(
+          ilike(submission.userName, `%${keyword}%`),
+          ilike(problem.name, `%${keyword}%`)
+        )
+      )
+    )
+    .limit(100);
 }
 
 export async function findSubmissionsByContestId(

@@ -18,7 +18,6 @@ export default function UserManagement() {
 
   const [users, setUsers] = useState<UserInfoDTO[]>();
   useEffect(() => {
-    console.log("useEffect");
     findAllUser().then((data) => {
       setUsers(data);
       setRefreshId(refreshParam);
@@ -36,14 +35,14 @@ export default function UserManagement() {
         </Button>
       </div>
 
-      <div className="flex flex-items-center justify-center gap-4">
+      <div className="flex flex-col items-center justify-center gap-4">
         {users ? (
           <div className="rounded-xl border shadow-lg">
             <DataTable
               key={refreshId}
               data={users}
               columns={getUserHeaders()}
-              paginationSize={8}
+              paginationSize={5}
               filterable={true}
             />
           </div>

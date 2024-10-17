@@ -160,7 +160,7 @@ export function DataTable<TData, TValue>({
           </TableRow>
         )}
       </TableBody>
-      {table.getPageCount() > table.getState().pagination.pageSize && (
+      {table.getRowCount() > table.getState().pagination.pageSize && (
         <TableFooter>
           <TablePagination table={table} />
         </TableFooter>

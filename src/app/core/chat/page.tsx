@@ -15,13 +15,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import { SubmissionWithProblem } from "@/db/schema/submission";
+import { findSubmissionByFilter } from "@/services/actions/SubmissionActions";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useChat } from "ai/react";
 import "katex/dist/katex.min.css";
-import { Check, ChevronDown, Code, Send } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Code,
+  Send,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import Markdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -29,22 +42,22 @@ import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import { z } from "zod";
 import { Model, predefinedModels, predefinedPrompts } from "./model-params";
 
-interface Submission {
-  id: string;
-  problem: string;
-  status: "Accepted" | "Wrong Answer" | "Time Limit Exceeded";
-  executionTime: number;
-  code: string;
-  language: string;
-}
+const formSchema = z.object({
+  prompt: z.string().min(1),
+});
 
 export default function CompetitiveProgrammingChat() {
   const [model, setModel] = useState<Model>(predefinedModels[0]);
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [selectedSubmissions, setSelectedSubmissions] = useState<string[]>([]);
+  const [submissions, setSubmissions] = useState<SubmissionWithProblem[]>([]);
+  const [selectedSubmissions, setSelectedSubmissions] = useState<
+    SubmissionWithProblem[]
+  >([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showPrompts, setShowPrompts] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -59,53 +72,45 @@ export default function CompetitiveProgrammingChat() {
       },
     });
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      prompt: "",
+    },
+  });
+
+  const onSubmit = (e: any) => {
+    handleSubmit(e);
+  };
+
+  const togglePrompts = () => {
+    setShowPrompts(!showPrompts);
+  };
+
   useEffect(() => {
-    setSubmissions([
-      {
-        id: "1",
-        problem: "Two Sum",
-        status: "Accepted",
-        executionTime: 50,
-        code: "#include <vector>\n#include <unordered_map>\n\nclass Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        unordered_map<int, int> map;\n        for (int i = 0; i < nums.size(); i++) {\n            int complement = target - nums[i];\n            if (map.find(complement) != map.end()) {\n                return {map[complement], i};\n            }\n            map[nums[i]] = i;\n        }\n        return {};\n    }\n};",
-        language: "cpp",
-      },
-      {
-        id: "2",
-        problem: "Reverse String",
-        status: "Wrong Answer",
-        executionTime: 30,
-        code: "def reverseString(s):\n    return s[::-1]",
-        language: "python",
-      },
-      {
-        id: "3",
-        problem: "Fibonacci",
-        status: "Time Limit Exceeded",
-        executionTime: 2000,
-        code: "public class Solution {\n    public int fibonacci(int n) {\n        if (n <= 1) return n;\n        return fibonacci(n - 1) + fibonacci(n - 2);\n    }\n}",
-        language: "java",
-      },
-    ]);
-  }, []);
+    setIsLoading(true);
+    findSubmissionByFilter(searchQuery).then((submissions) => {
+      setSubmissions(submissions);
+      setIsLoading(false);
+    });
+  }, [searchQuery]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const filteredSubmissions = submissions.filter((submission) =>
-    submission.problem.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const toggleSubmissionSelection = (id: string) => {
+  const toggleSubmissionSelection = (id: number) => {
     setSelectedSubmissions((prev) =>
-      prev.includes(id) ? prev.filter((subId) => subId !== id) : [...prev, id]
+      prev.find((s) => s.submission?.id === id)
+        ? prev.filter((s) => s.submission?.id !== id)
+        : [...prev, submissions.find((s) => s.submission?.id === id)!]
     );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e as any);
+      handleSubmit(e);
     }
   };
 
@@ -118,39 +123,68 @@ export default function CompetitiveProgrammingChat() {
 
   return (
     <div className="flex w-full h-[calc(100vh-4rem)]">
-      <div className="w-1/4 p-4 border-r">
-        <div className="mb-4">
+      <div className="w-1/4 p-4 border-r overflow-y-auto">
+        <div className="mb-4 flex">
           <Input
             type="text"
-            placeholder="Buscar envíos..."
+            placeholder="Buscar por usuario o problema..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full"
           />
         </div>
         <div className="space-y-2">
-          {filteredSubmissions.map((submission) => (
+          {isLoading ? (
+            <div className="flex justify-center items-center">
+              <small className="text-muted-foreground text-xs">
+                Solo se muestran si tienen código fuente
+              </small>
+              <Icons.Spinner className="animate-spin h-5 w-5 text-primary" />
+            </div>
+          ) : (
+            submissions?.length === 0 && (
+              <div className="text-muted-foreground text-center">
+                No hay resultados
+              </div>
+            )
+          )}
+          {submissions.map(({ submission, problem }) => (
             <Card
-              key={submission.id}
+              key={submission?.id}
               className={`cursor-pointer ${
-                selectedSubmissions.includes(submission.id)
+                selectedSubmissions.find(
+                  (x) => x?.submission?.id === submission?.id
+                )
                   ? "bg-primary/10"
                   : ""
               }`}
-              onClick={() => toggleSubmissionSelection(submission.id)}
+              onClick={() => toggleSubmissionSelection(submission?.id ?? 0)}
             >
               <CardContent className="p-2 flex items-center justify-between">
                 <div>
-                  <div className="font-medium">{submission.problem}</div>
+                  <div className="font-medium">{problem?.name}</div>
                   <div className="text-sm text-muted-foreground">
-                    <p>Resultado: {submission.status}</p>
-                    <p>Tiempo: {submission.executionTime} ms</p>
+                    <p>
+                      <strong>Usuario:</strong> {submission?.userName}
+                    </p>
+                    <p>
+                      <strong>Lenguaje:</strong> {submission?.language}
+                    </p>
+                    <p>
+                      <strong>Resultado:</strong> {submission?.result}
+                    </p>
+                    <p>
+                      <strong>Tiempo:</strong> {submission?.timeConsumed} ms
+                    </p>
+                    <p>
+                      <strong>Memoria:</strong> {submission?.memoryConsumed} KB
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  {selectedSubmissions.includes(submission.id) && (
-                    <Check className="h-4 w-4 text-primary" />
-                  )}
+                  {selectedSubmissions.find(
+                    (s) => s?.submission?.id == submission?.id
+                  ) && <Check className="h-4 w-4 text-primary" />}
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button
@@ -161,19 +195,33 @@ export default function CompetitiveProgrammingChat() {
                         <Code className="h-4 w-4" />
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[625px]">
+                    <DialogContent className="max-w-4xl h-[800px]">
                       <DialogHeader>
-                        <DialogTitle>{submission.problem} - Code</DialogTitle>
+                        <DialogTitle>
+                          <div className="flex items-center justify-center space-x-2">
+                            <span>{problem?.name}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {submission?.result}
+                            </span>
+                          </div>
+                          <div className="flex justify-center">
+                            <span className="text-xs text-muted-foreground">
+                              {submission?.timeConsumed} ms -{" "}
+                              {submission?.memoryConsumed} KB
+                            </span>
+                          </div>
+                        </DialogTitle>
                       </DialogHeader>
                       <SyntaxHighlighter
-                        language={submission.language}
+                        language={submission?.language?.toLowerCase() ?? "auto"}
                         style={oneLight}
                         customStyle={{
                           margin: 0,
+                          marginTop: 0,
                           borderRadius: "0.375rem",
                         }}
                       >
-                        {submission.code}
+                        {submission?.sourceCode ?? ""}
                       </SyntaxHighlighter>
                     </DialogContent>
                   </Dialog>
@@ -185,7 +233,7 @@ export default function CompetitiveProgrammingChat() {
       </div>
       <div className="flex-1 flex flex-col">
         <div className="p-4 border-b flex justify-between items-center">
-          <h1 className="text-2xl font-bold">ProventusChat</h1>
+          <h1 className="text-2xl font-bold">Proventus Chat</h1>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -266,13 +314,34 @@ export default function CompetitiveProgrammingChat() {
           <div ref={messagesEndRef} />
         </div>
         <div className="p-4 border-t">
-          {messages.length === 0 && (
+          <Button
+            onClick={togglePrompts}
+            variant="outline"
+            className="mb-4 w-full flex justify-between items-center"
+          >
+            {showPrompts ? "Ocultar prompts" : "Mostrar prompts"}
+            {showPrompts ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </Button>
+          {showPrompts && (
             <div className="grid grid-cols-2 gap-4 mb-4">
-              {predefinedPrompts.map((prompt, index) => (
+              {predefinedPrompts.map((prompt, _) => (
                 <Card
-                  key={index}
+                  key={prompt.title}
                   className="cursor-pointer hover:bg-muted/50 transition-colors"
-                  onClick={() => setInput(prompt.prompt)}
+                  onClick={() => {
+                    const code = selectedSubmissions
+                      .map((sub) => {
+                        return `\`\`\`${sub.submission?.language?.toLowerCase()}\n${
+                          sub.submission?.sourceCode
+                        }\`\`\` `;
+                      })
+                      .join("\n");
+                    setInput(`${prompt.prompt}\n${code}`);
+                  }}
                 >
                   <CardContent className="p-4">
                     <p className="font-medium text-sm">{prompt.title}</p>
@@ -282,26 +351,46 @@ export default function CompetitiveProgrammingChat() {
               ))}
             </div>
           )}
-          <form onSubmit={handleSubmit} className="flex items-center space-x-2">
-            <Textarea
-              ref={textareaRef}
-              value={input}
-              onChange={(e) => {
-                handleInputChange(e);
-                adjustTextareaHeight();
-              }}
-              onKeyDown={handleKeyDown}
-              placeholder="Pregunta algo sobre programación competitiva..."
-              className="flex-1 min-h-[40px] max-h-[200px] resize-none"
-              rows={1}
-            />
-            <Button type="submit">
-              <Send className="h-4 w-4" />
-            </Button>
-          </form>
+          <Form {...form}>
+            <form
+              className="flex items-center space-x-2"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="prompt"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        id="prompt"
+                        ref={textareaRef}
+                        value={input}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleInputChange(e);
+                          adjustTextareaHeight();
+                        }}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Pregunta algo sobre programación competitiva..."
+                        className={`flex-1 min-h-[40px] max-h-[200px] resize-none ${
+                          form.formState.errors.prompt ? "border-red-500" : ""
+                        }`}
+                        rows={1}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">
+                <Send className="h-4 w-4" />
+              </Button>
+            </form>
+          </Form>
           <small className="text-muted-foreground text-xs">
-            ProventusChat puede cometer errores. Comprueba la información
-            importante.
+            Los modelos de IA utilizados pueden cometer errores. Comprueba la
+            información suministrada.
           </small>
         </div>
       </div>

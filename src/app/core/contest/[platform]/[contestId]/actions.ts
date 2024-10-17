@@ -123,7 +123,6 @@ export async function saveScrapedContest(
     );
   }
   if (submissions && submissions.length > 0) {
-    console.log("Saving submissions");
     saveAllSubmission(SubmissionMapper.toNewSubmissionList(submissions));
   }
 }

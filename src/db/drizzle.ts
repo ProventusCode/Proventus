@@ -7,7 +7,7 @@ import { city, country, university } from "./schema/location";
 import { problem, problemRelations } from "./schema/problem";
 import { problemSet, problemSetRelations } from "./schema/problemSet";
 import { roleResource, roleResourceRelations } from "./schema/roleResource";
-import { submission } from "./schema/submission";
+import { submission, submissionRelations } from "./schema/submission";
 import { userInfo, userInfoRelations } from "./schema/user";
 import { userRole, userRoleRelations } from "./schema/userRole";
 
@@ -34,6 +34,7 @@ export const relations = {
   roleResourceRelations,
   problemRelations,
   problemSetRelations,
+  submissionRelations,
 };
 
 export const client = postgres(connectionString);

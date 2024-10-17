@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/auth/fail`);
   }
   const { user } = data;
-  console.log("user", user);
+
   if (user && !(await exitsUserById(user.id))) {
     const { id, email, user_metadata } = user;
     await saveUserInfo({
