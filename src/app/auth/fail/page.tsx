@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function PaginaErrorAutenticacion() {
+export default function AuthenticationErrorPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-full max-w-md">
@@ -35,7 +35,7 @@ export default function PaginaErrorAutenticacion() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           <Button asChild className="w-full">
-            <Link href="/auth">Intentar de Nuevo</Link>
+            <Link href="/auth">Intentar de nuevo</Link>
           </Button>
         </CardFooter>
       </Card>
