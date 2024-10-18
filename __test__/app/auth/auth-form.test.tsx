@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import AuthForm from "../../../app/auth/components/auth-form";
+import AuthForm from "../../../src/app/auth/components/auth-form";
 
 vi.mock("next/navigation", () => ({
   useRouter: vi.fn(),

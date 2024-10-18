@@ -259,3 +259,5 @@ Submit Time: hh:mm:ss
 [shadcn/ui expansions](https://shadcnui-expansions.typeart.cc/docs)
 
 [Add and Remove Table Rows with React TanStack](https://muhimasri.com/blogs/add-remove-react-table-rows/)
+
+[SonarCloud Config](https://github.com/SonarSource/sonarcloud-github-action/blob/master/README.md)
