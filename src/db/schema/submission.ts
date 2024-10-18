@@ -4,7 +4,8 @@ import { audit } from "./audit";
 import { competitor } from "./competitor";
 import { contest } from "./contest";
 import { judgeResultEnum } from "./enums";
-import { problem } from "./problem";
+import { Problem, problem } from "./problem";
+import { relations } from "drizzle-orm";
 
 export const submission = schema.table("submission", {
   id: serial("id").primaryKey(),
@@ -28,5 +29,17 @@ export const submission = schema.table("submission", {
   ...audit,
 });
 
+export const submissionRelations = relations(submission, ({ one }) => ({
+  problem: one(problem, {
+    fields: [submission.problemId],
+    references: [problem.problemId],
+  }),
+}));
+
 export type Submission = typeof submission.$inferSelect;
 export type NewSubmission = typeof submission.$inferInsert;
+
+export type SubmissionWithProblem = {
+  submission: Submission | null;
+  problem: Problem | null;
+};

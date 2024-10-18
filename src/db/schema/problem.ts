@@ -3,6 +3,7 @@ import { schema } from "../../../drizzle.config";
 import { audit } from "./audit";
 import { problemSet } from "./problemSet";
 import { relations } from "drizzle-orm";
+import { submission } from "./submission";
 
 export const problem = schema.table("problem", {
   id: serial("id").primaryKey(),
@@ -21,11 +22,12 @@ export const problem = schema.table("problem", {
   ...audit,
 });
 
-export const problemRelations = relations(problem, ({ one }) => ({
+export const problemRelations = relations(problem, ({ one, many }) => ({
   problemSet: one(problemSet, {
     fields: [problem.problemSetId],
     references: [problemSet.id],
   }),
+  submission: many(submission),
 }));
 
 export type Problem = typeof problem.$inferSelect;

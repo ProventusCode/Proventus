@@ -2,11 +2,14 @@
   "name": "proventus-frontend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
     "migrations:generate": "drizzle-kit generate",
     "migrations:migrate": "drizzle-kit migrate",
     "migrations:drop": "drizzle-kit drop"
@@ -29,6 +32,7 @@
     "@supabase/ssr": "^0.5.1",
     "@supabase/supabase-js": "^2.45.1",
     "@tanstack/react-table": "^8.20.1",
+    "@testing-library/jest-dom": "^6.6.2",
     "ai": "^3.4.2",
     "cheerio": "1.0.0-rc.12",
     "class-variance-authority": "^0.7.0",
@@ -58,17 +62,23 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.0.1",
     "@types/node": "^20.16.1",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@vitejs/plugin-react": "^4.3.2",
+    "@vitest/coverage-istanbul": "2.1.3",
     "autoprefixer": "^10.4.20",
     "drizzle-kit": "0.25.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.5",
+    "jsdom": "^25.0.1",
     "postcss": "^8.4.41",
     "supabase": "^1.190.0",
     "tailwindcss": "^3.4.10",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.1.3"
   }
 }

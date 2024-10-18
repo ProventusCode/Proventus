@@ -26,10 +26,10 @@ export async function saveProblemSet(newProblemSet: NewProblemSet) {
     .insert(problemSet)
     .values(newProblemSet)
     .onConflictDoUpdate({
-      target: problemSet.id,
+      target: problemSet.contestId,
       set: DatabaseUtils.conflictUpdateAllExcept(
         problemSet,
-        DatabaseUtils.TIME_COLUMNS
+        DatabaseUtils.DEFAULT_IGNORED_COLUMNS
       ),
     })
     .returning({ insertedId: problemSet.id });

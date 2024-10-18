@@ -11,7 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { readUser } from "@/lib/supabase/actions";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { Package2Icon, User } from "lucide-react";
+import {
+  BadgeAlertIcon,
+  Package2Icon,
+  StarOff,
+  Telescope,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -57,7 +63,9 @@ export default function Header() {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Configuraciones</DropdownMenuItem>
+          <DropdownMenuItem disabled>
+            Configuraciones <StarOff className="ml-2" />
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-red-600" onClick={handleSignOut}>
             Cerrar sesión

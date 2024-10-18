@@ -18,7 +18,7 @@ import {
   VjudgeContest,
   VjudgeProblem,
   VjudgeSubmission,
-} from "./types/VjudgeResponses";
+} from "./types/VjudgeResponse";
 
 export class VjudgeScraper implements ScraperService {
   isValidContestId(contestId: string): boolean {

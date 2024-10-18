@@ -5,6 +5,7 @@ import { RoleEnum } from "@/enums/RoleEnum";
 import { createColumnHelper } from "@tanstack/react-table";
 import ExportButton from "app/core/contest/[platform]/[contestId]/components/table-headers/export-button";
 import { EditCell } from "./edit-cell";
+import { DateUtils } from "@/utils/DateUtils";
 
 const columnHelper = createColumnHelper<UserInfoDTO>();
 
@@ -21,6 +22,17 @@ const bgMap: Record<string, string> = {
 };
 
 const userHeaders = [
+  columnHelper.accessor("createdAt", {
+    header: "Fecha registro",
+    enableColumnFilter: false,
+    cell: DataTableCell,
+    meta: {
+      type: "string",
+      customStyle: (value: string) => {
+        return <pre>{DateUtils.toPostgresDate(Date.parse(value))}</pre>;
+      },
+    },
+  }),
   columnHelper.accessor("name", {
     header: "Nombre",
     cell: DataTableCell,

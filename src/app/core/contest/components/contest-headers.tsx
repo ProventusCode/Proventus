@@ -64,7 +64,10 @@ const contestHeaders = [
     cell: (props) => {
       const data = props.row.original;
       return (
-        <Link className="justify-items-center" href={`/core/contest/${data.platform}/${data.contestId}`}>
+        <Link
+          className="justify-items-center"
+          href={`/core/contest/${data.platform}/${data.contestId}`}
+        >
           <SquareArrowOutUpRight className="hover:bg-muted hover:text-destructive" />
         </Link>
       );
