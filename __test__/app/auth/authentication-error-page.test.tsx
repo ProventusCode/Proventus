@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import AuthenticationErrorPage from "../../../app/auth/fail/page";
+import AuthenticationErrorPage from "../../../src/app/auth/fail/page";
 
 describe("AuthenticationErrorPage", () => {
   it("should render the card title", () => {
