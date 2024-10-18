@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES6",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": false,
+    "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -28,15 +28,15 @@
       "@/services/*": ["services/*"],
       "@/types/*": ["types/*"],
       "@/db/*": ["db/*"]
-    },
-    "typeRoots": ["src/lib/models/"]
+    }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/lib/types.d.ts"
+    "src/lib/types.d.ts",
+    "next.config.cjs"
   ],
   "exclude": ["node_modules"]
 }

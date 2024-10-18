@@ -148,7 +148,7 @@ export default function SignUpForm() {
             />
             <div className="grid pt-6">
               <Button type="submit" disabled={isLoading}>
-                Registrarse{" "}
+                Registrarme{" "}
                 {isLoading && (
                   <Icons.Spinner className="ml-2 h-4 w-4 animate-spin" />
                 )}
@@ -160,7 +160,7 @@ export default function SignUpForm() {
       <CardFooter className="grid gap-4">
         <OAuthForm />
         <p className="px-8 text-center text-sm text-muted-foreground">
-          Al hacer clic en registrarse, aceptas nuestros{" "}
+          Al hacer clic en Registrarme, aceptas nuestros{" "}
           <Link
             href="/terms"
             className="underline underline-offset-4 hover:text-primary"

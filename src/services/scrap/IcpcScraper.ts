@@ -1,39 +1,49 @@
-import { ContestType, ProblemType, SubmissionType } from "@/types/contest.types";
+import {
+  ContestStandingType,
+  ContestType,
+  ProblemType,
+  SubmissionType,
+} from "@/types/contest.types";
 import { ScraperService } from "./ScraperService";
+import { ENDPOINTS } from "../endpoints";
 
 export class IcpcScraper implements ScraperService {
   isValidContestId(contestId: string): boolean {
-    throw new Error("Method not implemented.");
+    return Number.isInteger(Number(contestId));
   }
 
   async getContestMetadata(contestId: string): Promise<ContestType> {
-    const ENV_URL =
-      "https://icpc.global/regionals/finder/ColombiaMaratonNalACISREDIS-2024";
-    return await fetch(ENV_URL).then((res) => res.json());
+    const endpoint = `${ENDPOINTS.icpc.contest}/ColombiaMaratonNalACISREDIS-2024`;
+    return await fetch(endpoint).then((res) => res.json());
   }
 
   async getProblems(contestId: string): Promise<ProblemType[]> {
-    throw new Error("Method not implemented.");
+    return [];
   }
 
   async getSubmissions(contestId: string): Promise<SubmissionType[]> {
-    throw new Error("Method not implemented.");
+    return [];
   }
 
-  async getContestStandings(contestId: string): Promise<any[]> {
-    const COUNT_URL =
-      "https://icpc.global/api/contest/public/search/contest/7549/count?q=proj";
+  async getContestStandings(contestId: string): Promise<ContestStandingType[]> {
+    const countEndpoint = `${ENDPOINTS.icpc.count}/${contestId}/count?q=proj`;
 
-    const countResponse = await fetch(COUNT_URL);
-    const countData = await countResponse.text();
+    const countResponse = await fetch(countEndpoint);
+    const dataLength = await countResponse.text();
 
-    const ENV_URL =
-      "https://icpc.global/api/contest/public/search/contest/7549?q=proj:teamId,time,rank,institution,teamName,problemsSolved,totalTime,lastProblemTime,medalCitation%3Bsort:rank+asc,problemsSolved+desc,totalTime+asc,lastProblemTime+asc%3B&page=1&size=" +
-      countData;
-    const response = await fetch(ENV_URL);
+    const standingEnpoint = `${ENDPOINTS.icpc.standings}/contestId?${ENDPOINTS.icpc.queryParams}$&size=${dataLength}`;
+    const response = await fetch(standingEnpoint);
 
-    const data = await response.json();
-
-    return data;
+    const rawData = await response.json();
+    return rawData.data?.map((team: any) => {
+      return {
+        contestId: contestId,
+        userName: team.teamName,
+        universityName: team.institution,
+        rank: team.rank,
+        problemsSolved: team.problemsSolved,
+        totalTime: team.totalTime,
+      };
+    });
   }
 }
