@@ -49,7 +49,7 @@ const formSchema = z.object({
   prompt: z.string().min(1),
 });
 
-export default function CompetitiveProgrammingChat() {
+export default function ChatPage() {
   const [model, setModel] = useState<Model>(predefinedModels[0]);
   const [submissions, setSubmissions] = useState<SubmissionWithProblem[]>([]);
   const [selectedSubmissions, setSelectedSubmissions] = useState<
@@ -96,7 +96,7 @@ export default function CompetitiveProgrammingChat() {
   }, [searchQuery]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const toggleSubmissionSelection = (id: number) => {
@@ -383,7 +383,7 @@ export default function CompetitiveProgrammingChat() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">
+              <Button type="submit" data-testid="send-button">
                 <Send className="h-4 w-4" />
               </Button>
             </form>
