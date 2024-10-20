@@ -1,13 +1,47 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { RoleEnum } from "@/enums/RoleEnum";
 import createSupabaseServerClient from "@/lib/supabase/server";
+import {
+  exitsUserById,
+  saveUserInfo,
+} from "@/services/actions/UserInfoActions";
+import { saveUserRole } from "@/services/actions/UserRoleActions";
+import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
+export async function GET(request: Request) {
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
+  const next = searchParams.get("next") ?? "/core";
 
-export async function GET(request: NextRequest) {
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get("code");
+  if (!code) {
+    return NextResponse.redirect(`${origin}/auth/fail`);
+  }
 
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-  return NextResponse.redirect(requestUrl.origin);
+  if (error) {
+    return NextResponse.redirect(`${origin}/auth/fail`);
+  }
+  const { user } = data;
+
+  if (user && !(await exitsUserById(user.id))) {
+    const { id, email, user_metadata } = user;
+    await saveUserInfo({
+      userId: id,
+      email: email ?? user_metadata.email,
+      name: user_metadata.display_name ?? user_metadata.name,
+    });
+    await saveUserRole({ userId: id, role: RoleEnum.STUDENT });
+  }
+
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const isLocalEnv = process.env.APP_ENV === "development";
+
+  if (isLocalEnv) {
+    return NextResponse.redirect(`${origin}${next}`);
+  } else if (forwardedHost) {
+    return NextResponse.redirect(`https://${forwardedHost}${next}`);
+  } else {
+    return NextResponse.redirect(`${origin}${next}`);
+  }
 }

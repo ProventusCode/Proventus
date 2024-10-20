@@ -1,12 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": false,
+    "target": "ES6",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -22,24 +18,25 @@
         "name": "next"
       }
     ],
+    "baseUrl": "src/",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
-    "typeRoots": [
-      "src/lib/models/"
-    ]
+      "@/*": ["./src/*"],
+      "@/lib/*": ["lib/*"],
+      "@/enums/*": ["enums/*"],
+      "@/components/*": ["components/*"],
+      "@/utils/*": ["utils/*"],
+      "@/services/*": ["services/*"],
+      "@/types/*": ["types/*"],
+      "@/db/*": ["db/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/auth/components",
-    "src/lib/types.d.ts"
+    "src/lib/types.d.ts",
+    "next.config.cjs"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

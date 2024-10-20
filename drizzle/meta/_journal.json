@@ -1,0 +1,90 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1726250479268,
+      "tag": "20240913180119_whole_raider",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1728181337245,
+      "tag": "20241006022217_glamorous_raza",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1728534661833,
+      "tag": "20241010043101_quick_dracula",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1728535677527,
+      "tag": "20241010044757_quick_impossible_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1728537881802,
+      "tag": "20241010052441_gifted_selene",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1728537905803,
+      "tag": "20241010052505_early_rictor",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1728869749729,
+      "tag": "20241014013549_mean_forgotten_one",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1728869958938,
+      "tag": "20241014013918_freezing_shooting_star",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1728953745374,
+      "tag": "20241015005545_lying_blur",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1728954222348,
+      "tag": "20241015010342_cute_master_chief",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1728971915086,
+      "tag": "20241015055835_unique_rocket_racer",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1728972782536,
+      "tag": "20241015061302_same_peter_parker",
+      "breakpoints": true
+    }
+  ]
+}
