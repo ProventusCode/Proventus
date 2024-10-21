@@ -1,4 +1,4 @@
-import { serial, text, varchar } from "drizzle-orm/pg-core";
+import { serial, text } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
 import { audit } from "./audit";
 

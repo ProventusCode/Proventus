@@ -22,7 +22,7 @@ export default function SkeletonTable({
 }: Readonly<SkeletonTableProps>) {
   return (
     <div className="flex flex-col items-center justify-center w-full overflow-x-auto">
-      <Table>
+      <Table data-testid={prefix}>
         <TableHeader>
           <TableRow className="bg-muted/50">
             {[...Array(columns)].map((_, index) => (
