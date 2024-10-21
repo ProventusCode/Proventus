@@ -35,6 +35,7 @@ export async function findSubmissionsByContestId(
 ): Promise<Submission[]> {
   return await database.query.submission.findMany({
     where: eq(submission.contestId, contestId),
+    orderBy: [submission.submissionDateTime],
   });
 }
 

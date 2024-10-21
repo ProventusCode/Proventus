@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -144,8 +145,17 @@ export function ContestForm() {
                           <SelectContent>
                             {Object.entries(PlatformEnum).map(
                               ([key, value]) => (
-                                <SelectItem key={key} value={value}>
+                                <SelectItem
+                                  key={key}
+                                  value={key}
+                                  disabled={key === PlatformEnum.CODEFORCES}
+                                >
                                   {value}
+                                  {key === PlatformEnum.CODEFORCES && (
+                                    <Badge variant="default" className="ml-2">
+                                      Próximamente
+                                    </Badge>
+                                  )}
                                 </SelectItem>
                               )
                             )}

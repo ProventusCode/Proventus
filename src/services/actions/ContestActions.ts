@@ -3,14 +3,16 @@
 import { database } from "@/db/drizzle";
 import { contest, Contest, NewContest } from "@/db/schema/contest";
 import { DatabaseUtils } from "@/utils/DatabaseUtils";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export async function existContestById(contestId: string): Promise<boolean> {
   return (await database.$count(contest, eq(contest.contestId, contestId))) > 0;
 }
 
 export async function findAllContest(): Promise<Contest[]> {
-  return await database.query.contest.findMany();
+  return await database.query.contest.findMany({
+    orderBy: [desc(contest.startDate)],
+  });
 }
 
 export async function findContestById(

@@ -34,6 +34,9 @@ const contestHeaders = [
     cell: DataTableCell,
     meta: {
       type: "datetime-local",
+      customStyle: (value: string) => {
+        return <div className="w-24">{value}</div>;
+      },
     },
   }),
   columnHelper.accessor("endDate", {
@@ -41,6 +44,9 @@ const contestHeaders = [
     cell: DataTableCell,
     meta: {
       type: "datetime-local",
+      customStyle: (value: string) => {
+        return <div className="w-24">{value}</div>;
+      }
     },
   }),
   columnHelper.accessor("manager", {

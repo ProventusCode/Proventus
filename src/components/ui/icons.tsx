@@ -176,6 +176,7 @@ export const Icons = {
   ),
   Spinner: (props: IconProps) => (
     <svg
+      data-testid="spinner"
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"

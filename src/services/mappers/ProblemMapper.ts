@@ -32,6 +32,7 @@ export class ProblemMapper {
     problems: Promise<ProblemSetWithProblems | undefined>
   ): Promise<ProblemType[]> {
     const problemsSet = await problems;
-    return problemsSet?.problems?.map(this.toProblemType) ?? [];
+
+    return problemsSet?.problems?.map(this.toProblemType) || [];
   }
 }

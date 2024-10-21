@@ -8,9 +8,11 @@ export const ENDPOINTS = {
   },
   icpc: {
     queryParams:
-      "q=proj:teamId,time,rank,institution,teamName,problemsSolved,totalTime,lastProblemTime,medalCitation%3Bsort:rank+asc,problemsSolved+desc,totalTime+asc,lastProblemTime+asc%3B&page=1",
-    contest: "https://icpc.global/regionals/finder/",
-    standings: "https://icpc.global/api/contest/public/search/contest/",
+      "q=proj:rank,institution,teamName,problemsSolved,totalTime,lastProblemTime,medalCitation&page=1&size=200",
+    contest:
+      "https://icpc.global/api/contest/public/ColombiaMaratonNalACISREDIS",
     count: "https://icpc.global/api/contest/public/search/contest",
+    finder: "https://icpc.global/regionals/finder/ColombiaMaratonNalACISREDIS",
+    standings: "https://icpc.global/api/contest/public/search/contest",
   },
 };
