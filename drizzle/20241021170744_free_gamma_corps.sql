@@ -1,0 +1,2 @@
+ALTER TABLE "analytics"."contest_standing" DROP CONSTRAINT "contest_standing_contest_id_rank_unique";--> statement-breakpoint
+ALTER TABLE "analytics"."contest_standing" ADD CONSTRAINT "contest_standing_contest_id_user_name_unique" UNIQUE("contest_id","user_name");

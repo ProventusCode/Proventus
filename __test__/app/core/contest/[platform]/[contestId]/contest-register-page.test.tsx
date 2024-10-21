@@ -1,10 +1,8 @@
 import { useToast } from "@/components/ui/use-toast";
 import {
-  cleanup,
-  fireEvent,
   render,
   screen,
-  waitFor,
+  waitFor
 } from "@testing-library/react";
 import { useParams, useRouter } from "next/navigation";
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";

@@ -14,6 +14,7 @@ export async function findStandingsByContestId(
 ): Promise<ContestStanding[]> {
   return await database.query.contestStanding.findMany({
     where: eq(contestStanding.contestId, contestId),
+    orderBy: [contestStanding.rank],
   });
 }
 

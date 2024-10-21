@@ -1,0 +1,1 @@
+ALTER TABLE "analytics"."contest_standing" ADD CONSTRAINT "contest_standing_contest_id_rank_unique" UNIQUE("contest_id","rank");

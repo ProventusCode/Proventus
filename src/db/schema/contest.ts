@@ -1,4 +1,4 @@
-import { integer, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { integer, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
 import { audit } from "./audit";
 import { platformEnum } from "./enums";

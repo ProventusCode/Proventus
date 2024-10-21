@@ -70,7 +70,7 @@ export default function ContestMetadataForm({
   const contestMetadataForm = useForm<z.infer<typeof contestFormSchema>>({
     resolver: zodResolver(contestFormSchema),
     defaultValues: {
-      contestId: contestMetadata?.contestId ?? "",
+      contestId: contestMetadata?.contestId + "",
       name: contestMetadata?.name ?? "",
       platform: contestMetadata?.platform ?? "",
       startDate: DateUtils.parsePostgresDate(contestMetadata?.startDate),
@@ -109,7 +109,12 @@ export default function ContestMetadataForm({
                   Plataforma <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input className="bg-slate-100" id="platform" {...field} />
+                  <Input
+                    className="bg-slate-100"
+                    id="platform"
+                    readOnly
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -125,7 +130,12 @@ export default function ContestMetadataForm({
                   Identificador <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input className="bg-slate-100" id="contestId" {...field} />
+                  <Input
+                    className="bg-slate-100"
+                    id="contestId"
+                    {...field}
+                    readOnly
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

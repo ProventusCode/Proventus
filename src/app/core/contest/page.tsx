@@ -31,7 +31,7 @@ export default function ContestsListPage() {
       <div className="flex flex-items-center justify-center gap-4">
         {contests ? (
           <div className="rounded-xl border shadow-lg">
-            <DataTable data={contests} columns={getContestHeaders()} />
+            <DataTable data={contests} columns={getContestHeaders()} paginationSize={6} />
           </div>
         ) : (
           <SkeletonTable columns={8} rows={5} prefix="standings" />
