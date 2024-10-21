@@ -59,7 +59,6 @@ export async function loadContest(contestId: string): Promise<ContestResponse> {
   const submissions = SubmissionMapper.toSubmissionTypeListAsync(
     findSubmissionsByContestId(contestId)
   );
-  console.log(submissions);
   const standings = StandingsMapper.toContestStandingTypeListAsync(
     findStandingsByContestId(contestId)
   );
