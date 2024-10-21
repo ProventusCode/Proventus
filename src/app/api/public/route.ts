@@ -1,24 +1,12 @@
-"üse server";
+// "üse server";
 
-import { getBrowser } from "@/services/scrap/BrowserFactory";
-import { VjudgeScraper } from "@/services/scrap/VjudgeScraper";
-import { ProblemType, SubmissionType } from "@/types/contest.types";
-import * as cheerio from "cheerio";
-import { randomUUID } from "crypto";
+// import { getBrowser } from "@/services/scrap/BrowserFactory";
+// import { VjudgeScraper } from "@/services/scrap/VjudgeScraper";
+// import { ProblemType, SubmissionType } from "@/types/contest.types";
+// import * as cheerio from "cheerio";
+// import { randomUUID } from "crypto";
 
-import { NextRequest, NextResponse } from "next/server";
-
-export async function POST(request: NextRequest) {
-  console.log(request.body);
-  return NextResponse.json({ message: "Hello" });
-}
-
-export async function GET() {
-  const contestId = "431663";
-  const scraper = new VjudgeScraper();
-  const contest = await scraper.getSubmissions(contestId);
-  return NextResponse.json(contest);
-}
+// import { NextRequest, NextResponse } from "next/server";
 
 // export async function scrapBoca() {
 //   const ENV_URL = "https://redprogramacioncompetitiva.com/contests/2023/13/";
