@@ -1,5 +1,5 @@
 import { NewUserInfo, UserInfoDTO } from "@/db/schema/user";
-import { NewUserRole, UserRole } from "@/db/schema/userRole";
+import { NewUserRole } from "@/db/schema/userRole";
 import { RoleEnum } from "@/enums/RoleEnum";
 import { UserType } from "@/types/contest.types";
 

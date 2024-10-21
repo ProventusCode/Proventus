@@ -1,10 +1,9 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
-import ChatPage from "../../../src/app/core/chat/page";
+import ChatPage from "../../../../src/app/core/chat/page";
 import { findSubmissionByFilter } from "@/services/actions/SubmissionActions";
 import { useChat } from "ai/react";
 
-// Mock the external dependencies
 vi.mock("@/services/actions/SubmissionActions", () => ({
   findSubmissionByFilter: vi.fn(),
 }));

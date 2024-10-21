@@ -22,7 +22,6 @@ export function EditCell<TData>({
   const router = useRouter();
 
   const handleSaveUser = (user: UserType) => {
-    console.log("handleSaveUser", user);
     updateUserInfo(UserMapper.toNewUserInfo(user));
     updateUserRole(UserMapper.toUpdateUserRole(user));
     router.push(`/core/users?refresh=${Date.now()}`);
