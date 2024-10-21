@@ -5,7 +5,6 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Star } from "lucide-react";
 import { getTags } from "../../actions";
 import { EditCell } from "./edit-cell";
-import { ExportAsExcel } from "react-export-table";
 import ExportButton from "./export-button";
 
 const columnHelper = createColumnHelper<ProblemType>();
