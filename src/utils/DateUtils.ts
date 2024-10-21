@@ -8,6 +8,12 @@ export class DateUtils {
     return date ? format(date, this.POSTGRES_DATE_FORMAT) : undefined;
   }
 
+  static toDateWithTime(date: string | null, time: string): string | undefined {
+    if (!date) return this.toPostgresDate(new Date());
+
+    return `${date} ${time}`;
+  }
+
   static parsePostgresDate(date: string | undefined): Date {
     return date
       ? parse(date, this.POSTGRES_DATE_FORMAT, new Date())

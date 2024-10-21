@@ -9,7 +9,6 @@ import { NextResponse } from "next/server";
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { GET } from "../../../src/app/auth/callback/route";
 
-// Mock the external dependencies
 vi.mock("@/lib/supabase/server", () => ({
   default: vi.fn(),
 }));

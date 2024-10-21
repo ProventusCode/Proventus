@@ -29,7 +29,7 @@ const userHeaders = [
     meta: {
       type: "string",
       customStyle: (value: string) => {
-        return <pre>{DateUtils.toPostgresDate(Date.parse(value))}</pre>;
+        return <div className="w-24">{DateUtils.toPostgresDate(Date.parse(value))}</div>;
       },
     },
   }),

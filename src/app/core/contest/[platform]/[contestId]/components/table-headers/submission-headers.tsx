@@ -10,11 +10,7 @@ import {
   CheckCircle,
   Clock,
   Code,
-  Code2,
-  CodeSquare,
-  FileText,
-  SquareTerminal,
-  Text,
+  FileText
 } from "lucide-react";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";

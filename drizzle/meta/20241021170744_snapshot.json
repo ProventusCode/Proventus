@@ -1,0 +1,954 @@
+{
+  "id": "9b03b442-1c91-48c5-aac2-86fdaeb4ec48",
+  "prevId": "b6592c47-4dba-46b0-8724-87a9449990a9",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "analytics.competitor": {
+      "name": "competitor",
+      "schema": "analytics",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "university_name": {
+          "name": "university_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "competitor_name_unique": {
+          "name": "competitor_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      }
+    },
+    "analytics.contest": {
+      "name": "contest",
+      "schema": "analytics",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "contest_id": {
+          "name": "contest_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "platform": {
+          "name": "platform",
+          "type": "platform_enum",
+          "typeSchema": "analytics",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "manager": {
+          "name": "manager",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "participants": {
+          "name": "participants",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "contest_contest_id_unique": {
+          "name": "contest_contest_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "contest_id"
+          ]
+        }
+      }
+    },
+    "analytics.contest_standing": {
+      "name": "contest_standing",
+      "schema": "analytics",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "contest_id": {
+          "name": "contest_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rank": {
+          "name": "rank",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_name": {
+          "name": "user_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "university_name": {
+          "name": "university_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "problems_solved": {
+          "name": "problems_solved",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_time": {
+          "name": "total_time",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "problem_statistics": {
+          "name": "problem_statistics",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "contest_standing_contest_id_contest_contest_id_fk": {
+          "name": "contest_standing_contest_id_contest_contest_id_fk",
+          "tableFrom": "contest_standing",
+          "tableTo": "contest",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "contest_id"
+          ],
+          "columnsTo": [
+            "contest_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contest_standing_user_name_competitor_name_fk": {
+          "name": "contest_standing_user_name_competitor_name_fk",
+          "tableFrom": "contest_standing",
+          "tableTo": "competitor",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "user_name"
+          ],
+          "columnsTo": [
+            "name"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "contest_standing_contest_id_user_name_unique": {
+          "name": "contest_standing_contest_id_user_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "contest_id",
+            "user_name"
+          ]
+        }
+      }
+    },
+    "analytics.city": {
+      "name": "city",
+      "schema": "analytics",
+      "columns": {
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "country_code": {
+          "name": "country_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "city_country_code_country_code_fk": {
+          "name": "city_country_code_country_code_fk",
+          "tableFrom": "city",
+          "tableTo": "country",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "country_code"
+          ],
+          "columnsTo": [
+            "code"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "city_code_unique": {
+          "name": "city_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      }
+    },
+    "analytics.country": {
+      "name": "country",
+      "schema": "analytics",
+      "columns": {
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "country_code_unique": {
+          "name": "country_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      }
+    },
+    "analytics.university": {
+      "name": "university",
+      "schema": "analytics",
+      "columns": {
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "city_code": {
+          "name": "city_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "university_city_code_city_code_fk": {
+          "name": "university_city_code_city_code_fk",
+          "tableFrom": "university",
+          "tableTo": "city",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "city_code"
+          ],
+          "columnsTo": [
+            "code"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "university_code_unique": {
+          "name": "university_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      }
+    },
+    "analytics.problem": {
+      "name": "problem",
+      "schema": "analytics",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "problem_id": {
+          "name": "problem_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "problem_set_id": {
+          "name": "problem_set_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "index": {
+          "name": "index",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tags": {
+          "name": "tags",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "author": {
+          "name": "author",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "origin": {
+          "name": "origin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "time_limit": {
+          "name": "time_limit",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "memory_limit": {
+          "name": "memory_limit",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "problem_problem_set_id_problem_set_id_fk": {
+          "name": "problem_problem_set_id_problem_set_id_fk",
+          "tableFrom": "problem",
+          "tableTo": "problem_set",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "problem_set_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "problem_problem_id_unique": {
+          "name": "problem_problem_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "problem_id"
+          ]
+        }
+      }
+    },
+    "analytics.problem_set": {
+      "name": "problem_set",
+      "schema": "analytics",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "contest_id": {
+          "name": "contest_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "problems_url": {
+          "name": "problems_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "editorial_url": {
+          "name": "editorial_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "problem_set_contest_id_contest_contest_id_fk": {
+          "name": "problem_set_contest_id_contest_contest_id_fk",
+          "tableFrom": "problem_set",
+          "tableTo": "contest",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "contest_id"
+          ],
+          "columnsTo": [
+            "contest_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "problem_set_contest_id_unique": {
+          "name": "problem_set_contest_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "contest_id"
+          ]
+        }
+      }
+    },
+    "analytics.role_resource": {
+      "name": "role_resource",
+      "schema": "analytics",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "role_enum",
+          "typeSchema": "analytics",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resources": {
+          "name": "resources",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "role_resource_role_unique": {
+          "name": "role_resource_role_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "role"
+          ]
+        }
+      }
+    },
+    "analytics.submission": {
+      "name": "submission",
+      "schema": "analytics",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "submission_id": {
+          "name": "submission_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contest_id": {
+          "name": "contest_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_name": {
+          "name": "user_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "problem_id": {
+          "name": "problem_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code_length": {
+          "name": "code_length",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "memory_consumed": {
+          "name": "memory_consumed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "time_consumed": {
+          "name": "time_consumed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "result": {
+          "name": "result",
+          "type": "result_enum",
+          "typeSchema": "analytics",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "language": {
+          "name": "language",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source_code": {
+          "name": "source_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "submission_date": {
+          "name": "submission_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "submission_contest_id_contest_contest_id_fk": {
+          "name": "submission_contest_id_contest_contest_id_fk",
+          "tableFrom": "submission",
+          "tableTo": "contest",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "contest_id"
+          ],
+          "columnsTo": [
+            "contest_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "submission_user_name_competitor_name_fk": {
+          "name": "submission_user_name_competitor_name_fk",
+          "tableFrom": "submission",
+          "tableTo": "competitor",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "user_name"
+          ],
+          "columnsTo": [
+            "name"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "submission_problem_id_problem_problem_id_fk": {
+          "name": "submission_problem_id_problem_problem_id_fk",
+          "tableFrom": "submission",
+          "tableTo": "problem",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "problem_id"
+          ],
+          "columnsTo": [
+            "problem_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "submission_submission_id_unique": {
+          "name": "submission_submission_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "submission_id"
+          ]
+        }
+      }
+    },
+    "analytics.user": {
+      "name": "user",
+      "schema": "analytics",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "university_code": {
+          "name": "university_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_university_code_university_code_fk": {
+          "name": "user_university_code_university_code_fk",
+          "tableFrom": "user",
+          "tableTo": "university",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "university_code"
+          ],
+          "columnsTo": [
+            "code"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_user_id_unique": {
+          "name": "user_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id"
+          ]
+        }
+      }
+    },
+    "analytics.user_role": {
+      "name": "user_role",
+      "schema": "analytics",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "role_enum",
+          "typeSchema": "analytics",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_role_user_id_user_user_id_fk": {
+          "name": "user_role_user_id_user_user_id_fk",
+          "tableFrom": "user_role",
+          "tableTo": "user",
+          "schemaTo": "analytics",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "analytics.result_enum": {
+      "name": "result_enum",
+      "schema": "analytics",
+      "values": [
+        "ACCEPTED",
+        "WRONG_ANSWER",
+        "TIME_LIMIT_EXCEEDED",
+        "MEMORY_LIMIT_EXCEEDED",
+        "RUNTIME_ERROR",
+        "COMPILATION_ERROR",
+        "PRESENTATION_ERROR",
+        "CLASS_NAME_MISMATCH",
+        "UNKNOWN"
+      ]
+    },
+    "analytics.platform_enum": {
+      "name": "platform_enum",
+      "schema": "analytics",
+      "values": [
+        "VJUDGE",
+        "CODEFORCES",
+        "ICPC"
+      ]
+    },
+    "analytics.role_enum": {
+      "name": "role_enum",
+      "schema": "analytics",
+      "values": [
+        "ADMIN",
+        "PROFESSOR",
+        "STUDENT"
+      ]
+    },
+    "analytics.tag_enum": {
+      "name": "tag_enum",
+      "schema": "analytics",
+      "values": [
+        ""
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

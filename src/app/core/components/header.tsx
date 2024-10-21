@@ -12,11 +12,9 @@ import {
 import { readUser } from "@/lib/supabase/actions";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import {
-  BadgeAlertIcon,
   Package2Icon,
   StarOff,
-  Telescope,
-  User,
+  User
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

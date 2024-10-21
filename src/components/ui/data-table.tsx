@@ -99,7 +99,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <Table className="rounded-xl">
+    <Table className="rounded-xl overflow-hidden">
       <TableHeader className="bg-gray-50">
         <TableRow>
           {table.getHeaderGroups().map((headerGroup) =>

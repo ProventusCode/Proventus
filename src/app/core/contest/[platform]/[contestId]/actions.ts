@@ -53,7 +53,6 @@ export async function findContest(
 
 export async function loadContest(contestId: string): Promise<ContestResponse> {
   const contest = ContestMapper.toContestTypeAsync(findContestById(contestId));
-
   const problems = ProblemMapper.toProblemTypeListAsync(
     findProblemsByContestId(contestId)
   );

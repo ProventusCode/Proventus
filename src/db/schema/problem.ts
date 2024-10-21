@@ -1,4 +1,4 @@
-import { integer, serial, text } from "drizzle-orm/pg-core";
+import { decimal, integer, real, serial, text } from "drizzle-orm/pg-core";
 import { schema } from "../../../drizzle.config";
 import { audit } from "./audit";
 import { problemSet } from "./problemSet";
@@ -17,7 +17,7 @@ export const problem = schema.table("problem", {
   tags: text("tags").array(),
   author: text("author"),
   origin: text("origin"),
-  timeLimit: integer("time_limit"),
+  timeLimit: real("time_limit"),
   memoryLimit: integer("memory_limit"),
   ...audit,
 });

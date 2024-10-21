@@ -21,8 +21,8 @@ export default function SkeletonTable({
   prefix,
 }: Readonly<SkeletonTableProps>) {
   return (
-    <div className="flex flex-col items-center justify-center w-full overflow-x-auto">
-      <Table>
+    <div className="flex flex-col items-center justify-center w-full overflow-x-auto rounded-xl border shadow-lg">
+      <Table data-testid={prefix} className="rounded-xl overflow-hidden">
         <TableHeader>
           <TableRow className="bg-muted/50">
             {[...Array(columns)].map((_, index) => (

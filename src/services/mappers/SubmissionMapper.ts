@@ -33,6 +33,6 @@ export class SubmissionMapper {
     submissions: Promise<Submission[]>
   ): Promise<SubmissionType[]> {
     const submissionList = await submissions;
-    return submissionList.map(this.toSubmissionType);
+    return submissionList?.map(this.toSubmissionType) || [];
   }
 }

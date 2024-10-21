@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { getUserHeaders } from "./components/user-headers";
 import { useSearchParams } from "next/navigation";
 
-export default function UserManagement() {
+export default function UserManagementPage() {
   const params = useSearchParams();
   const refreshParam = params.get("refresh");
   const [refreshId, setRefreshId] = useState<string | null>(null);

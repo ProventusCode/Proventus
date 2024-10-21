@@ -9,7 +9,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -18,7 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Column } from "@tanstack/react-table";
 import { Check, FilterIcon } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 interface CustomColumnMeta {
   filterVariant?: string;

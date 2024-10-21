@@ -13,6 +13,6 @@ export class StandingsMapper {
     standings: Promise<ContestStanding[]>
   ): Promise<ContestStandingType[]> {
     const standingList = await standings;
-    return standingList.map(this.toContestStandingType);
+    return standingList?.map(this.toContestStandingType) || [];
   }
 }
